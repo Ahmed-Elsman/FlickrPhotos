@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		270BB612274A729A0041EAD4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270BB611274A729A0041EAD4 /* SceneDelegate.swift */; };
-		270BB617274A729A0041EAD4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270BB615274A729A0041EAD4 /* Main.storyboard */; };
 		270BB619274A729C0041EAD4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 270BB618274A729C0041EAD4 /* Assets.xcassets */; };
 		270BB61C274A729C0041EAD4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270BB61A274A729C0041EAD4 /* LaunchScreen.storyboard */; };
 		270BB627274A729D0041EAD4 /* FlickrPhotoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270BB626274A729D0041EAD4 /* FlickrPhotoTests.swift */; };
@@ -36,7 +35,6 @@
 /* Begin PBXFileReference section */
 		270BB60C274A729A0041EAD4 /* FlickrPhoto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlickrPhoto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		270BB611274A729A0041EAD4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		270BB616274A729A0041EAD4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		270BB618274A729C0041EAD4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		270BB61B274A729C0041EAD4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		270BB61D274A729C0041EAD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -96,7 +94,6 @@
 			isa = PBXGroup;
 			children = (
 				270BB611274A729A0041EAD4 /* SceneDelegate.swift */,
-				270BB615274A729A0041EAD4 /* Main.storyboard */,
 				270BB618274A729C0041EAD4 /* Assets.xcassets */,
 				270BB61A274A729C0041EAD4 /* LaunchScreen.storyboard */,
 				270BB61D274A729C0041EAD4 /* Info.plist */,
@@ -227,7 +224,6 @@
 			files = (
 				270BB61C274A729C0041EAD4 /* LaunchScreen.storyboard in Resources */,
 				270BB619274A729C0041EAD4 /* Assets.xcassets in Resources */,
-				270BB617274A729A0041EAD4 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,14 +285,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		270BB615274A729A0041EAD4 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				270BB616274A729A0041EAD4 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		270BB61A274A729C0041EAD4 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -430,24 +418,25 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FlickrPhoto/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Flicker;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = mobiquity.FlickrPhoto;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mobiquity.FlickrPhoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -457,24 +446,25 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FlickrPhoto/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Flicker;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = mobiquity.FlickrPhoto;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mobiquity.FlickrPhoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
