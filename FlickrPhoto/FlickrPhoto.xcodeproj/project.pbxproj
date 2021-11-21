@@ -17,6 +17,7 @@
 		27BD2E2D274A7814001B950D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E2C274A7814001B950D /* AppDelegate.swift */; };
 		27BD2E2F274A7B16001B950D /* PhotosListBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E2E274A7B16001B950D /* PhotosListBuilder.swift */; };
 		27BD2E31274A7BC6001B950D /* PhotosListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E30274A7BC6001B950D /* PhotosListViewModel.swift */; };
+		27BD2E33274A7C6C001B950D /* AppEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E32274A7C6C001B950D /* AppEntry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		27BD2E2C274A7814001B950D /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27BD2E2E274A7B16001B950D /* PhotosListBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListBuilder.swift; sourceTree = "<group>"; };
 		27BD2E30274A7BC6001B950D /* PhotosListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListViewModel.swift; sourceTree = "<group>"; };
+		27BD2E32274A7C6C001B950D /* AppEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEntry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +134,7 @@
 			children = (
 				27BD2E2C274A7814001B950D /* AppDelegate.swift */,
 				270BB611274A729A0041EAD4 /* SceneDelegate.swift */,
+				27BD2E32274A7C6C001B950D /* AppEntry.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 			files = (
 				27BD2E2D274A7814001B950D /* AppDelegate.swift in Sources */,
 				270BB612274A729A0041EAD4 /* SceneDelegate.swift in Sources */,
+				27BD2E33274A7C6C001B950D /* AppEntry.swift in Sources */,
 				27BD2E31274A7BC6001B950D /* PhotosListViewModel.swift in Sources */,
 				27BD2E2F274A7B16001B950D /* PhotosListBuilder.swift in Sources */,
 				270BB643274A76430041EAD4 /* PhotosListViewController.swift in Sources */,
