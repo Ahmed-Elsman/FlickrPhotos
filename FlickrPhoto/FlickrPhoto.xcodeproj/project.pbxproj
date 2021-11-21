@@ -24,6 +24,7 @@
 		27BD2E3D274A8281001B950D /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E3C274A8281001B950D /* Photos.swift */; };
 		27BD2E3F274A8366001B950D /* APILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E3E274A8366001B950D /* APILoader.swift */; };
 		27BD2E42274A873B001B950D /* PhotoCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E41274A873B001B950D /* PhotoCollectionCell.swift */; };
+		27BD2E45274A890B001B950D /* ReusableCellExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E44274A890B001B950D /* ReusableCellExtention.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		27BD2E3C274A8281001B950D /* Photos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos.swift; sourceTree = "<group>"; };
 		27BD2E3E274A8366001B950D /* APILoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APILoader.swift; sourceTree = "<group>"; };
 		27BD2E41274A873B001B950D /* PhotoCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionCell.swift; sourceTree = "<group>"; };
+		27BD2E44274A890B001B950D /* ReusableCellExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableCellExtention.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 		270BB60E274A729A0041EAD4 /* FlickrPhoto */ = {
 			isa = PBXGroup;
 			children = (
+				27BD2E43274A8890001B950D /* Extentions */,
 				270BB63F274A758A0041EAD4 /* App */,
 				27BD2E34274A7DEA001B950D /* NetworkLayer */,
 				27BD2E35274A7E3B001B950D /* Model */,
@@ -197,6 +200,14 @@
 				27BD2E41274A873B001B950D /* PhotoCollectionCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		27BD2E43274A8890001B950D /* Extentions */ = {
+			isa = PBXGroup;
+			children = (
+				27BD2E44274A890B001B950D /* ReusableCellExtention.swift */,
+			);
+			path = Extentions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -331,6 +342,7 @@
 			files = (
 				27BD2E2D274A7814001B950D /* AppDelegate.swift in Sources */,
 				270BB612274A729A0041EAD4 /* SceneDelegate.swift in Sources */,
+				27BD2E45274A890B001B950D /* ReusableCellExtention.swift in Sources */,
 				27BD2E33274A7C6C001B950D /* AppEntry.swift in Sources */,
 				27BD2E3B274A826D001B950D /* Photo.swift in Sources */,
 				27BD2E39274A824D001B950D /* FlickrSearchResult.swift in Sources */,
