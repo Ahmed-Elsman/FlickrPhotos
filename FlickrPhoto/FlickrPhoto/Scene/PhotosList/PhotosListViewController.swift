@@ -16,12 +16,23 @@ class PhotosListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        view.backgroundColor = .yellow
+        setupUI()
     }
     
     
     // MARK: - Setup UI
+    
+    private func setupUI() {
+        view.backgroundColor = .white
+        view.addSubview(photosCollectionView)
+        NSLayoutConstraint.activate([
+            photosCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            photosCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            photosCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            photosCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
     
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
