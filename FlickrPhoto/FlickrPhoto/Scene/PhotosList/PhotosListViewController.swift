@@ -31,8 +31,26 @@ class PhotosListViewController: UIViewController {
             photosCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
             photosCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        setupNavigationBar()
     }
     
+    private func setupNavigationBar() {
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.label]
+        navigationItem.title = "Fliker Photos"
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = UIColor.lightGray
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.label]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.label]
+        appearance.shadowColor = .clear
+        appearance.shadowImage = UIImage()
+
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.hidesBarsOnSwipe = true
+    }
     
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
