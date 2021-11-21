@@ -12,6 +12,8 @@ class PhotosListViewController: UIViewController {
     // MARK: - Outlets
     private lazy var photosCollectionView: UICollectionView = createCollectionView()
     
+    var viewModel: PhotosListViewModelInput?
+    
     // MARK: - View lifeCycle
     
     override func viewDidLoad() {

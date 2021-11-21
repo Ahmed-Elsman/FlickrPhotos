@@ -6,9 +6,24 @@
 //
 
 import Foundation
+import Combine
+
+protocol PhotosListViewModelInput: AnyObject {
+    func search(for text: String)
+    var itemsForCollection: CurrentValueSubject<[ItemCollectionViewCellType], Never> { get set }
+}
+
 
 final class PhotosListViewModel {
     
-    // MARK: Injections
+    fileprivate var page: Int = 1
+    fileprivate var canLoadMore = true
     
+    var itemsForCollection = CurrentValueSubject<[ItemCollectionViewCellType], Never>([])
+    var cancelableSet: Set<AnyCancellable> =  Set<AnyCancellable>()
+    
+    init() {
+        
+    }
 }
+

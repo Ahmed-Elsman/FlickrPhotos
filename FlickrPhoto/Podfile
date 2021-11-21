@@ -1,0 +1,18 @@
+platform :ios, '13.0'
+
+target 'FlickrPhoto' do
+  use_frameworks!
+
+  # Pods for FlickrPhoto
+   pod 'Kingfisher'
+   pod 'SwiftMessages'
+  target 'FlickrPhotoTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'FlickrPhotoUITests' do
+    # Pods for testing
+  end
+
+end
