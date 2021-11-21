@@ -19,3 +19,15 @@ extension UICollectionView {
         return dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? Cell
     }
 }
+
+#warning("add this in another file")
+
+protocol CellReusable {
+    static var identifier: String { get }
+}
+
+extension CellReusable {
+    static var identifier: String {
+        return "\(self)"
+    }
+}
