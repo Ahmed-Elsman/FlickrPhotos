@@ -11,7 +11,7 @@ import Combine
 
 final class APILoader {
     
-    func loadData<T: Decodable>(from url: URL) -> AnyPublisher<T, Error> {
+    func loadData<T: Decodable>(from url: URL) -> AnyPublisher<T, FlickrPhotoError> {
         return URLSession.shared
             .dataTaskPublisher(for: url)
             .tryMap() { element -> Data in
@@ -22,6 +22,9 @@ final class APILoader {
                 return element.data
             }
             .decode(type: T.self, decoder: JSONDecoder())
+            .mapError({ error -> FlickrPhotoError in
+                error as? FlickrPhotoError ?? FlickrPhotoError.runtimeError("Wrong !!")
+            })
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
