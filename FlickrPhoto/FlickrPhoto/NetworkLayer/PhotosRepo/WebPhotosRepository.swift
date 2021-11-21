@@ -8,11 +8,6 @@
 import Foundation
 import Combine
 
-protocol PhotosRepository {
-    func photos(for query: String, page: Int) throws -> AnyPublisher<FlickrSearchResult, FlickrPhotoError>
-}
-
-
 final class WebPhotosRepository: PhotosRepository {
     
     let loader: APILoader
