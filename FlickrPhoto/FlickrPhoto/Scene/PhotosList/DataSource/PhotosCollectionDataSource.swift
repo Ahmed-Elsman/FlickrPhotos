@@ -48,7 +48,7 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
                 return cell
             }
         }
-
+        
         return UICollectionViewCell()
     }
     
@@ -62,11 +62,11 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
             return CGSize(width: collectionView.bounds.width, height: CellHeightConstant.heightOfSearchTermCell)
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
+        
         switch kind {
-
+            
         case UICollectionView.elementKindSectionHeader:
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderCollectionCell.identifier, for: indexPath)  as! HeaderCollectionCell
             if let state =  viewModelInput?.state {
@@ -80,7 +80,7 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
             }
             return headerView
         default:
-
+            
             assert(false, "Unexpected element kind")
         }
     }
@@ -94,22 +94,15 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
         let widthAndHeight = (collectionView.bounds.width / 2) - 10
         return CGSize(width: widthAndHeight, height: widthAndHeight)
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if case .photo = itemsForCollection[indexPath.row], indexPath.row == itemsForCollection.count - 1 {
             let pageToGet = Int(indexPath.row / Constant.numberOfPhotosPerPage) + 1
             viewModelInput?.loadMoreData(pageToGet)
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 30)
     }
-}
-
-
-#warning("add this in another file")
-enum ItemCollectionViewCellType {
-    case photo(photo: Photo)
-    case search(term: String)
 }
