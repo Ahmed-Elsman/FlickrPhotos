@@ -12,6 +12,7 @@ protocol PhotosListViewModelInput: AnyObject {
     func search(for text: String)
     var state: CurrentValueSubject<State, Never> { get set }
     var itemsForCollection: CurrentValueSubject<[ItemCollectionViewCellType], FlickrPhotoError> { get set }
+    func loadMoreData(_ page: Int)
 }
 
 
@@ -49,6 +50,15 @@ extension PhotosListViewModel: PhotosListViewModelInput {
         getData(for: text)
     }
     
+    func loadMoreData(_ page: Int) {
+        if self.page <= page && canLoadMore == true {
+            self.page = page
+            if case .searchResult(let query) = state.value {
+                getData(for: query)
+            }
+        }
+    }
+    
 }
 
 // MARK: Setup
@@ -58,17 +68,22 @@ extension PhotosListViewModel {
     private func getData(for query: String) {
         output?.showLoading()
         canLoadMore = false
-        
+
+
         try? photosRepository.photos(for: query, page: page).sink(receiveCompletion: { [unowned self] completion in
             self.output?.hideLoading()
+
             switch completion {
             case .finished:
                 break
             case .failure(let error):
                 self.itemsForCollection.send(completion: .failure(error))
+
             }
+
         }, receiveValue: { [unowned self] searchResult in
             self.output?.hideLoading()
+
             guard let photos = searchResult.photos, photos.currentPage < photos.totalPages  else {
                 self.handleNoPhotos()
                 return
@@ -77,6 +92,7 @@ extension PhotosListViewModel {
             self.canLoadMore = true
 
         }).store(in: &cancelableSet)
+
     }
     
     private func handleNewPhotos(photos: Photos) {
