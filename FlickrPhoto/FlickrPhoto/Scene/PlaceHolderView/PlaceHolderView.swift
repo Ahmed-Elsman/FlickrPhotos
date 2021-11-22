@@ -111,7 +111,6 @@ final class EmptyPlaceHolderView: UIView {
         stackView.addArrangedSubview(logoImageView)
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(detailsLabel)
-        stackView.setCustomSpacing(30, after: detailsLabel)
         return stackView
     }
     
