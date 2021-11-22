@@ -48,7 +48,7 @@ class PhotosListViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.label]
         navigationItem.title = "Fliker Photos"
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = UIColor.lightGray
+        appearance.backgroundColor = .white
         appearance.titleTextAttributes = [.foregroundColor: UIColor.label]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.label]
         appearance.shadowColor = .clear
@@ -85,6 +85,7 @@ class PhotosListViewController: UIViewController {
         searchController.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
+        searchController.searchBar.tintColor = .black
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
         extendedLayoutIncludesOpaqueBars = true

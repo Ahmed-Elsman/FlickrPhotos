@@ -38,6 +38,9 @@ final class PhotosListViewModel {
     init(output: BaseViewModelOutput, photosRepository: WebPhotosRepository = WebPhotosRepository()) {
         self.output = output
         self.photosRepository = photosRepository
+        [Notifications.Reachability.connected.name, Notifications.Reachability.notConnected.name].forEach { (notification) in
+            NotificationCenter.default.addObserver(self, selector: #selector(changeInternetStatus), name: notification, object: nil)
+        }
     }
 }
 
@@ -71,6 +74,13 @@ extension PhotosListViewModel: PhotosListViewModelInput {
         itemsForCollection.send(createItemsForCollection(searchTerms: searchTerms))
     }
     
+    @objc
+    private func changeInternetStatus(notification: Notification) {
+        if notification.name == Notifications.Reachability.notConnected.name {
+            output?.showError(title: "No Internet Conncection", subtitle: "No Internet Conncection")
+            itemsForCollection.send(completion: .failure(FlickrPhotoError.noInternetConnection))
+        }
+    }
 }
 
 // MARK: Setup
@@ -78,9 +88,12 @@ extension PhotosListViewModel: PhotosListViewModelInput {
 extension PhotosListViewModel {
     
     private func getData(for query: String) {
+        guard Reachability.shared.isConnected else {
+            itemsForCollection.send(completion: .failure(FlickrPhotoError.noInternetConnection))
+            return
+        }
         output?.showLoading()
         canLoadMore = false
-        
         
         try? photosRepository.photos(for: query, page: page).sink(receiveCompletion: { [unowned self] completion in
             self.output?.hideLoading()
