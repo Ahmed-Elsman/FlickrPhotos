@@ -45,12 +45,14 @@ final class PhotosListViewModel {
 // MARK: - PhotosListViewModelInput
 extension PhotosListViewModel: PhotosListViewModelInput {
     
-    func search(for text: String) {
-        state.send(.searchResult(term: text))
+    func search(for keyword: String) {
+        state.send(.searchResult(term: keyword))
         itemsForCollection.value = []
         self.page = 1
         self.canLoadMore = true
-        getData(for: text)
+        let searchHistoryRepository = SearchHistoryRepository()
+        searchHistoryRepository.saveSearchKeyword(searchKeyword: keyword)
+        getData(for: keyword)
     }
     
     func loadMoreData(_ page: Int) {
