@@ -121,7 +121,7 @@ final class EmptyPlaceHolderView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 40),
-            imageView.widthAnchor.constraint(equalToConstant: 60)
+            imageView.widthAnchor.constraint(equalToConstant: 40)
         ])
         return imageView
     }
@@ -140,7 +140,7 @@ extension UICollectionView {
             emptyPlaceHolderView.centerYAnchor.constraint(equalTo: centerYAnchor),
             emptyPlaceHolderView.centerXAnchor.constraint(equalTo: centerXAnchor),
             emptyPlaceHolderView.widthAnchor.constraint(equalTo: widthAnchor),
-            emptyPlaceHolderView.heightAnchor.constraint(equalToConstant: 200)
+            emptyPlaceHolderView.heightAnchor.constraint(equalToConstant: 150)
         ])
     }
     
