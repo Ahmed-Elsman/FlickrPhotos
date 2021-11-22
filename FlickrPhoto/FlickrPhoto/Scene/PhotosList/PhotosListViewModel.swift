@@ -9,15 +9,18 @@ import Foundation
 import Combine
 
 protocol PhotosListViewModelInput: AnyObject {
-    func search(for text: String)
     var state: CurrentValueSubject<State, Never> { get set }
     var itemsForCollection: CurrentValueSubject<[ItemCollectionViewCellType], FlickrPhotoError> { get set }
+    
+    func search(for text: String)
     func loadMoreData(_ page: Int)
+    func getSearchHistory()
 }
 
 
 enum State {
     case searchResult(term: String)
+    case searchHistory
 }
 
 final class PhotosListViewModel {
@@ -29,7 +32,7 @@ final class PhotosListViewModel {
     fileprivate var canLoadMore = true
     
     var itemsForCollection = CurrentValueSubject<[ItemCollectionViewCellType], FlickrPhotoError>([])
-    var state: CurrentValueSubject<State, Never> = CurrentValueSubject<State, Never>(.searchResult(term: ""))
+    var state: CurrentValueSubject<State, Never> = CurrentValueSubject<State, Never>(.searchHistory)
     var cancelableSet: Set<AnyCancellable> =  Set<AnyCancellable>()
     
     init(output: BaseViewModelOutput, photosRepository: WebPhotosRepository = WebPhotosRepository()) {
@@ -59,6 +62,13 @@ extension PhotosListViewModel: PhotosListViewModelInput {
         }
     }
     
+    func getSearchHistory() {
+        state.send(.searchHistory)
+        let searchHistoryRepository = SearchHistoryRepository()
+        let searchTerms = searchHistoryRepository.getSearchHistory()
+        itemsForCollection.send(createItemsForCollection(searchTerms: searchTerms))
+    }
+    
 }
 
 // MARK: Setup
@@ -68,31 +78,31 @@ extension PhotosListViewModel {
     private func getData(for query: String) {
         output?.showLoading()
         canLoadMore = false
-
-
+        
+        
         try? photosRepository.photos(for: query, page: page).sink(receiveCompletion: { [unowned self] completion in
             self.output?.hideLoading()
-
+            
             switch completion {
             case .finished:
                 break
             case .failure(let error):
                 self.itemsForCollection.send(completion: .failure(error))
-
+                
             }
-
+            
         }, receiveValue: { [unowned self] searchResult in
             self.output?.hideLoading()
-
+            
             guard let photos = searchResult.photos, photos.currentPage < photos.totalPages  else {
                 self.handleNoPhotos()
                 return
             }
             self.handleNewPhotos(photos: photos)
             self.canLoadMore = true
-
+            
         }).store(in: &cancelableSet)
-
+        
     }
     
     private func handleNewPhotos(photos: Photos) {
@@ -114,6 +124,12 @@ extension PhotosListViewModel {
     private func createItemsForCollection(photosArray: [Photo]) -> [ItemCollectionViewCellType] {
         return photosArray.map { photo -> ItemCollectionViewCellType  in
                 .photo(photo: photo)
+        }
+    }
+    
+    private func createItemsForCollection(searchTerms: [String]) -> [ItemCollectionViewCellType] {
+        return searchTerms.map { searchTerm -> ItemCollectionViewCellType  in
+                .search(term: searchTerm)
         }
     }
 }

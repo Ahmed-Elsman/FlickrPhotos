@@ -33,6 +33,8 @@
 		27BD2E54274AE4AA001B950D /* WebPhotosRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E53274AE4AA001B950D /* WebPhotosRepository.swift */; };
 		27BD2E56274AE549001B950D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E55274AE549001B950D /* Constants.swift */; };
 		27BD2E58274AE5AE001B950D /* PhotosRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E57274AE5AE001B950D /* PhotosRepository.swift */; };
+		27BD2E5B274B7376001B950D /* SearchHistoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E5A274B7376001B950D /* SearchHistoryRepository.swift */; };
+		27BD2E5D274B74DC001B950D /* SearchHistoryCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E5C274B74DC001B950D /* SearchHistoryCollectionCell.swift */; };
 		4CFD46E49377B654243DA973 /* Pods_FlickrPhotoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5801640B1AC6E6A79F87E9CD /* Pods_FlickrPhotoTests.framework */; };
 		9C7992176EDE76BC7DC61ABD /* Pods_FlickrPhoto_FlickrPhotoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7923CF8D2584D3BD85BCDB94 /* Pods_FlickrPhoto_FlickrPhotoUITests.framework */; };
 		F048949299405DE5E2BB0B52 /* Pods_FlickrPhoto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4B5B77C386239974594213 /* Pods_FlickrPhoto.framework */; };
@@ -86,6 +88,8 @@
 		27BD2E53274AE4AA001B950D /* WebPhotosRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPhotosRepository.swift; sourceTree = "<group>"; };
 		27BD2E55274AE549001B950D /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		27BD2E57274AE5AE001B950D /* PhotosRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosRepository.swift; sourceTree = "<group>"; };
+		27BD2E5A274B7376001B950D /* SearchHistoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryRepository.swift; sourceTree = "<group>"; };
+		27BD2E5C274B74DC001B950D /* SearchHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		3F75B742929213839D9D5AE7 /* Pods-FlickrPhotoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickrPhotoTests.debug.xcconfig"; path = "Target Support Files/Pods-FlickrPhotoTests/Pods-FlickrPhotoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4AAD392CD009961E693C021C /* Pods-FlickrPhoto-FlickrPhotoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickrPhoto-FlickrPhotoUITests.debug.xcconfig"; path = "Target Support Files/Pods-FlickrPhoto-FlickrPhotoUITests/Pods-FlickrPhoto-FlickrPhotoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		5801640B1AC6E6A79F87E9CD /* Pods_FlickrPhotoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlickrPhotoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,6 +218,7 @@
 		27BD2E34274A7DEA001B950D /* NetworkLayer */ = {
 			isa = PBXGroup;
 			children = (
+				27BD2E59274B7350001B950D /* SearchHistoryRepo */,
 				27BD2E52274AE481001B950D /* PhotosRepo */,
 				27BD2E36274A801F001B950D /* APILinksBuilder.swift */,
 				27BD2E3E274A8366001B950D /* APILoader.swift */,
@@ -236,6 +241,7 @@
 			isa = PBXGroup;
 			children = (
 				27BD2E41274A873B001B950D /* PhotoCollectionCell.swift */,
+				27BD2E5C274B74DC001B950D /* SearchHistoryCollectionCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -273,6 +279,14 @@
 				27BD2E57274AE5AE001B950D /* PhotosRepository.swift */,
 			);
 			path = PhotosRepo;
+			sourceTree = "<group>";
+		};
+		27BD2E59274B7350001B950D /* SearchHistoryRepo */ = {
+			isa = PBXGroup;
+			children = (
+				27BD2E5A274B7376001B950D /* SearchHistoryRepository.swift */,
+			);
+			path = SearchHistoryRepo;
 			sourceTree = "<group>";
 		};
 		516776CB07B28D9AE0B2DA09 /* Pods */ = {
@@ -551,11 +565,13 @@
 				27BD2E42274A873B001B950D /* PhotoCollectionCell.swift in Sources */,
 				27BD2E2F274A7B16001B950D /* PhotosListBuilder.swift in Sources */,
 				27BD2E3F274A8366001B950D /* APILoader.swift in Sources */,
+				27BD2E5D274B74DC001B950D /* SearchHistoryCollectionCell.swift in Sources */,
 				27BD2E56274AE549001B950D /* Constants.swift in Sources */,
 				27BD2E37274A801F001B950D /* APILinksBuilder.swift in Sources */,
 				27BD2E3D274A8281001B950D /* Photos.swift in Sources */,
 				27BD2E54274AE4AA001B950D /* WebPhotosRepository.swift in Sources */,
 				270BB643274A76430041EAD4 /* PhotosListViewController.swift in Sources */,
+				27BD2E5B274B7376001B950D /* SearchHistoryRepository.swift in Sources */,
 				27BD2E58274AE5AE001B950D /* PhotosRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

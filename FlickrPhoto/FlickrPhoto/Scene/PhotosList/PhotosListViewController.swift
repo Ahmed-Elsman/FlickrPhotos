@@ -145,6 +145,10 @@ class PhotosListViewController: UIViewController {
         photosCollectionView.dataSource = nil
         photosCollectionView.reloadData()
     }
+    
+    private func getSearchHistory() {
+        viewModel?.getSearchHistory()
+    }
 }
 
 // MARK: UISearchBarDelegate
@@ -153,12 +157,14 @@ extension PhotosListViewController: UISearchBarDelegate {
         searchBar.text = nil
         searchBar.resignFirstResponder()
         searchBar.setShowsCancelButton(false, animated: true)
+        getSearchHistory()
     }
 }
 
 extension PhotosListViewController: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         searchController.dismiss(animated: true)
+        getSearchHistory()
         return true
     }
 }
@@ -167,6 +173,7 @@ extension PhotosListViewController: UITextFieldDelegate {
 extension PhotosListViewController: UISearchControllerDelegate {
     func didPresentSearchController(_ searchController: UISearchController) {
             searchController.searchBar.becomeFirstResponder()
+            getSearchHistory()
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -182,6 +189,7 @@ extension PhotosListViewController: UISearchControllerDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
+            getSearchHistory()
         }
     }
 }

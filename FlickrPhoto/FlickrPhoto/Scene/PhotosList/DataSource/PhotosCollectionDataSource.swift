@@ -15,6 +15,8 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
     
     private struct CellHeightConstant {
         static let heightOfPhotoCell: CGFloat = 120
+        static let heightOfSearchTermCell: CGFloat = 50
+        static let heightOfHistoryHeader: CGFloat = 120
     }
     
     init(viewModelInput: PhotosListViewModelInput?, itemsForCollection: [ItemCollectionViewCellType]) {
@@ -40,6 +42,11 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
                 cell.configCell(photo: photo)
                 return cell
             }
+        case .search(let term):
+            if let cell = collectionView.dequeueCell(type: SearchHistoryCollectionCell.self, indexPath: indexPath) {
+                cell.configCell(searchTerm: term)
+                return cell
+            }
         }
 
         return UICollectionViewCell()
@@ -51,6 +58,8 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
         switch item {
         case .photo:
             return getPhotoCellSize(collectionView: collectionView)
+        case .search:
+            return CGSize(width: collectionView.bounds.width, height: CellHeightConstant.heightOfSearchTermCell)
         }
     }
     
@@ -75,4 +84,5 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
 #warning("add this in another file")
 enum ItemCollectionViewCellType {
     case photo(photo: Photo)
+    case search(term: String)
 }
