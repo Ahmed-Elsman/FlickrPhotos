@@ -127,6 +127,7 @@ final class EmptyPlaceHolderView: UIView {
 }
 
 
+#warning("Need To be moved in another file")
 extension UICollectionView {
     
     func setEmptyView(emptyPlaceHolderType: EmptyPlaceHolderType, completionBlock: (() -> Void)? = nil) {

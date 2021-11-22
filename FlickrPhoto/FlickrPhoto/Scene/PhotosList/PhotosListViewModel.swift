@@ -80,7 +80,7 @@ extension PhotosListViewModel: PhotosListViewModelInput {
     private func changeInternetStatus(notification: Notification) {
         if notification.name == Notifications.Reachability.notConnected.name {
             output?.showError(title: "No Internet Conncection", subtitle: "No Internet Conncection")
-            itemsForCollection.send(completion: .failure(FlickrPhotoError.noInternetConnection))
+            emptyPlaceHolder.send(.noInternetConnection)
         } else {
             emptyPlaceHolder.send(.startSearch)
         }
@@ -93,7 +93,7 @@ extension PhotosListViewModel {
     
     private func getData(for query: String) {
         guard Reachability.shared.isConnected else {
-            itemsForCollection.send(completion: .failure(FlickrPhotoError.noInternetConnection))
+            emptyPlaceHolder.send(.noInternetConnection)
             return
         }
         output?.showLoading()
@@ -128,7 +128,7 @@ extension PhotosListViewModel {
         let newItems: [ItemCollectionViewCellType] = createItemsForCollection(photosArray: photos.photos)
         itemsForCollection.value.append(contentsOf: newItems)
         if itemsForCollection.value.isEmpty {
-            itemsForCollection.send(completion: .failure(FlickrPhotoError.noResults))
+            emptyPlaceHolder.send(.noResults)
         } else {
             itemsForCollection.send(newItems)
         }
@@ -136,7 +136,7 @@ extension PhotosListViewModel {
     
     private func handleNoPhotos() {
         if  itemsForCollection.value.isEmpty {
-            itemsForCollection.send(completion: .failure(FlickrPhotoError.noResults))
+            emptyPlaceHolder.send(.noResults)
         }
     }
     
