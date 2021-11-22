@@ -62,6 +62,12 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
             return CGSize(width: collectionView.bounds.width, height: CellHeightConstant.heightOfSearchTermCell)
         }
     }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if case let .search(term) = itemsForCollection[indexPath.row]  {
+            viewModelInput?.search(for: term)
+        }
+    }
     
     private func getPhotoCellSize(collectionView: UICollectionView) -> CGSize {
         let widthAndHeight = (collectionView.bounds.width / 2) - 10

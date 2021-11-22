@@ -27,6 +27,7 @@ class PhotosListViewController: UIViewController {
         setupNavigationBar()
         setupSearchController()
         setupBindings()
+        getSearchHistory()
     }
     
     
