@@ -63,6 +63,27 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
         }
     }
 
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+
+        switch kind {
+
+        case UICollectionView.elementKindSectionHeader:
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderCollectionCell.identifier, for: indexPath)  as! HeaderCollectionCell
+            if let state =  viewModelInput?.state {
+                switch state.value {
+                case .searchHistory:
+                    headerView.configCell(searchTerm: "Search History")
+                case .searchResult(let term):
+                    let headerTitle = "Searching For \(term)"
+                    headerView.configCell(searchTerm: headerTitle)
+                }
+            }
+            return headerView
+        default:
+
+            assert(false, "Unexpected element kind")
+        }
+    }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if case let .search(term) = itemsForCollection[indexPath.row]  {
             viewModelInput?.search(for: term)

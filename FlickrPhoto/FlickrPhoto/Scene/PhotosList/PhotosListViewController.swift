@@ -73,6 +73,9 @@ class PhotosListViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.registerCell(type: PhotoCollectionCell.self)
         collectionView.registerCell(type: SearchHistoryCollectionCell.self)
+        collectionView.register(HeaderCollectionCell.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: HeaderCollectionCell.identifier)
         collectionView.tag = 1
         collectionView.backgroundColor = .white
         return collectionView
