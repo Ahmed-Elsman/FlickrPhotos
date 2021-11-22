@@ -91,7 +91,7 @@ class PhotosListViewController: UIViewController {
         extendedLayoutIncludesOpaqueBars = true
         edgesForExtendedLayout = .all
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Type Keyword to search"
+        searchController.searchBar.placeholder = "Write Keyword to search"
         definesPresentationContext = true
     }
     
@@ -141,14 +141,19 @@ class PhotosListViewController: UIViewController {
         if case let .searchResult(term) = viewModel?.state.value {
             searchController.searchBar.text = term
         }
-
+        photosCollectionView.restore()
+        
+        guard !itemsForCollection.isEmpty else {
+            showReadyToSearch()
+            return
+        }
+        
         if collectionDataSource == nil {
             collectionDataSource = PhotosCollectionViewDataSource(viewModelInput: viewModel, itemsForCollection: itemsForCollection)
             photosCollectionView.dataSource = collectionDataSource
             photosCollectionView.delegate = collectionDataSource
             photosCollectionView.reloadData()
         } else {
-            
             let fromIndex = collectionDataSource?.itemsForCollection.count ?? 0
             collectionDataSource?.itemsForCollection.append(contentsOf: itemsForCollection)
             let toIndex = collectionDataSource?.itemsForCollection.count ?? 0
@@ -173,6 +178,12 @@ class PhotosListViewController: UIViewController {
     
     private func getSearchHistory() {
         viewModel?.getSearchHistory()
+    }
+    
+    private func showReadyToSearch() {
+        photosCollectionView.setEmptyView(emptyPlaceHolderType: .startSearch, completionBlock: { [weak self] in
+            self?.searchController.isActive = true
+        })
     }
 }
 

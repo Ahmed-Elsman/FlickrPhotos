@@ -16,19 +16,19 @@ enum EmptyPlaceHolderType {
 }
 
 final class EmptyPlaceHolderView: UIView {
-
+    
     private var subscriptions = Set<AnyCancellable>()
-
+    
     @Published var emptyPlaceHolderType: EmptyPlaceHolderType = .noInternetConnection
-
+    
     private lazy var logoImageView: UIImageView = createImageView()
-
+    
     private lazy var titleLabel: UILabel = createTitleLabel()
     private lazy var detailsLabel: UILabel = createDetailsLabel()
-
-
+    
+    
     private lazy var contentStackView: UIStackView = createContentStackView()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -53,17 +53,17 @@ final class EmptyPlaceHolderView: UIView {
             }
         }.store(in: &subscriptions)
     }
-
+    
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private func setupViews() {
         addSubview(contentStackView)
         setupConstraints()
     }
-
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             contentStackView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
@@ -72,9 +72,9 @@ final class EmptyPlaceHolderView: UIView {
             contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
-
+    
     // MARK: - Setup UI
-
+    
     private func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .bold)
@@ -87,7 +87,7 @@ final class EmptyPlaceHolderView: UIView {
         label.tag = Tags.Placeholder.mainTitle.rawValue
         return label
     }
-
+    
     private func createDetailsLabel() -> UILabel {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13, weight: .regular)
@@ -100,7 +100,7 @@ final class EmptyPlaceHolderView: UIView {
         label.tag = Tags.Placeholder.description.rawValue
         return label
     }
-
+    
     private func createContentStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -114,7 +114,7 @@ final class EmptyPlaceHolderView: UIView {
         stackView.setCustomSpacing(30, after: detailsLabel)
         return stackView
     }
-
+    
     private func createImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -129,21 +129,21 @@ final class EmptyPlaceHolderView: UIView {
 
 
 extension UICollectionView {
-
+    
     func setEmptyView(emptyPlaceHolderType: EmptyPlaceHolderType, completionBlock: (() -> Void)? = nil) {
-            let frame = CGRect(x: center.x, y: center.y, width: bounds.size.width, height: bounds.size.height)
-            let emptyPlaceHolderView = EmptyPlaceHolderView(frame: frame)
-            emptyPlaceHolderView.translatesAutoresizingMaskIntoConstraints = false
-            emptyPlaceHolderView.emptyPlaceHolderType = emptyPlaceHolderType
-            backgroundView = emptyPlaceHolderView
-            NSLayoutConstraint.activate([
-                emptyPlaceHolderView.centerYAnchor.constraint(equalTo: centerYAnchor),
-                emptyPlaceHolderView.centerXAnchor.constraint(equalTo: centerXAnchor),
-                emptyPlaceHolderView.widthAnchor.constraint(equalTo: widthAnchor),
-                emptyPlaceHolderView.heightAnchor.constraint(equalToConstant: 200)
-            ])
+        let frame = CGRect(x: center.x, y: center.y, width: bounds.size.width, height: bounds.size.height)
+        let emptyPlaceHolderView = EmptyPlaceHolderView(frame: frame)
+        emptyPlaceHolderView.translatesAutoresizingMaskIntoConstraints = false
+        emptyPlaceHolderView.emptyPlaceHolderType = emptyPlaceHolderType
+        backgroundView = emptyPlaceHolderView
+        NSLayoutConstraint.activate([
+            emptyPlaceHolderView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            emptyPlaceHolderView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            emptyPlaceHolderView.widthAnchor.constraint(equalTo: widthAnchor),
+            emptyPlaceHolderView.heightAnchor.constraint(equalToConstant: 200)
+        ])
     }
-
+    
     func restore() {
         backgroundView = nil
     }
