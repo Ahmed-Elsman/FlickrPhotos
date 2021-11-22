@@ -71,6 +71,7 @@ class PhotosListViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.registerCell(type: PhotoCollectionCell.self)
+        collectionView.registerCell(type: SearchHistoryCollectionCell.self)
         collectionView.tag = 1
         collectionView.backgroundColor = .white
         return collectionView
