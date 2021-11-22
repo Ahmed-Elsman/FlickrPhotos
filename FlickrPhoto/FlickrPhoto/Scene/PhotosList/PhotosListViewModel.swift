@@ -11,6 +11,7 @@ import Combine
 protocol PhotosListViewModelInput: AnyObject {
     var state: CurrentValueSubject<State, Never> { get set }
     var itemsForCollection: CurrentValueSubject<[ItemCollectionViewCellType], FlickrPhotoError> { get set }
+    var emptyPlaceHolder: CurrentValueSubject<EmptyPlaceHolderType, Never> { get set }
     
     func search(for text: String)
     func loadMoreData(_ page: Int)
@@ -34,6 +35,7 @@ final class PhotosListViewModel {
     var itemsForCollection = CurrentValueSubject<[ItemCollectionViewCellType], FlickrPhotoError>([])
     var state: CurrentValueSubject<State, Never> = CurrentValueSubject<State, Never>(.searchHistory)
     var cancelableSet: Set<AnyCancellable> =  Set<AnyCancellable>()
+    var emptyPlaceHolder = CurrentValueSubject<EmptyPlaceHolderType, Never>(.startSearch)
     
     init(output: BaseViewModelOutput, photosRepository: WebPhotosRepository = WebPhotosRepository()) {
         self.output = output
@@ -79,6 +81,8 @@ extension PhotosListViewModel: PhotosListViewModelInput {
         if notification.name == Notifications.Reachability.notConnected.name {
             output?.showError(title: "No Internet Conncection", subtitle: "No Internet Conncection")
             itemsForCollection.send(completion: .failure(FlickrPhotoError.noInternetConnection))
+        } else {
+            emptyPlaceHolder.send(.startSearch)
         }
     }
 }

@@ -24,8 +24,8 @@ class PhotosListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupNavigationBar()
         setupSearchController()
+        setupNavigationBar()
         setupBindings()
         getSearchHistory()
     }
@@ -95,13 +95,13 @@ class PhotosListViewController: UIViewController {
         definesPresentationContext = true
     }
     
-    private func setupBindings(){
-        viewModel?.itemsForCollection.sink(receiveCompletion: {completion in
+    private func setupBindings() {
+        viewModel?.itemsForCollection.sink(receiveCompletion: { [unowned self] completion in
             switch completion {
             case .finished:
                 break
             case .failure(let error):
-                print("error \(error)")
+                updateData(error: error)
             }
         }, receiveValue: { [unowned self] itemsForCollection in
             self.updateData(itemsForCollection: itemsForCollection)
@@ -110,26 +110,45 @@ class PhotosListViewController: UIViewController {
         viewModel?.state.sink { [unowned self] state in
             self.clearCollection()
         }.store(in: &cancelableSet)
+
+        viewModel?.emptyPlaceHolder.sink { [unowned self] emptyPlaceHolderType in
+            self.emptyState(emptyPlaceHolderType: emptyPlaceHolderType)
+        }.store(in: &cancelableSet)
     }
 
+    private func emptyState(emptyPlaceHolderType: EmptyPlaceHolderType) {
+        clearCollection()
+        photosCollectionView.setEmptyView(emptyPlaceHolderType: emptyPlaceHolderType, completionBlock: { [weak self] in
+            if let text = self?.searchController.searchBar.text, !text.isEmpty, text.count >= 3 {
+                self?.viewModel?.search(for: text)
+            }
+        })
+    }
+
+    private func updateData(error: Error) {
+        switch error as? FlickrPhotoError {
+        case .noResults:
+            emptyState(emptyPlaceHolderType: .noResults)
+        case .noInternetConnection:
+            emptyState(emptyPlaceHolderType: .noInternetConnection)
+        default:
+            emptyState(emptyPlaceHolderType: .error(message: error.localizedDescription))
+        }
+    }
+    
     private func updateData(itemsForCollection: [ItemCollectionViewCellType]) {
-        // reset term text to searchBar in case it removed
+        
         if case let .searchResult(term) = viewModel?.state.value {
             searchController.searchBar.text = term
         }
 
-
-        // Reload the collectionView
         if collectionDataSource == nil {
             collectionDataSource = PhotosCollectionViewDataSource(viewModelInput: viewModel, itemsForCollection: itemsForCollection)
             photosCollectionView.dataSource = collectionDataSource
             photosCollectionView.delegate = collectionDataSource
             photosCollectionView.reloadData()
         } else {
-
-            // Reload only the updated cells
-
-            //Get the inserted new cells
+            
             let fromIndex = collectionDataSource?.itemsForCollection.count ?? 0
             collectionDataSource?.itemsForCollection.append(contentsOf: itemsForCollection)
             let toIndex = collectionDataSource?.itemsForCollection.count ?? 0

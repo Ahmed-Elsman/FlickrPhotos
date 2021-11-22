@@ -13,5 +13,6 @@ enum Tags {
     }
     enum Placeholder: Int {
         case mainTitle = 1
+        case description = 2
     }
 }
