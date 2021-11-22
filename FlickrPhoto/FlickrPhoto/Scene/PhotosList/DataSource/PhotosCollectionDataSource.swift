@@ -11,13 +11,13 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
     
     var itemsForCollection: [ItemCollectionViewCellType] = []
     
-    weak var viewModelInput: PhotosListViewModel?
+    weak var viewModelInput: PhotosListViewModelInput?
     
     private struct CellHeightConstant {
         static let heightOfPhotoCell: CGFloat = 120
     }
     
-    init(viewModelInput: PhotosListViewModel?, itemsForCollection: [ItemCollectionViewCellType]) {
+    init(viewModelInput: PhotosListViewModelInput?, itemsForCollection: [ItemCollectionViewCellType]) {
         self.itemsForCollection = itemsForCollection
         self.viewModelInput = viewModelInput
     }

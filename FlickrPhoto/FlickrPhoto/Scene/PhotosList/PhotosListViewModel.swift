@@ -10,6 +10,7 @@ import Combine
 
 protocol PhotosListViewModelInput: AnyObject {
     func search(for text: String)
+    var state: CurrentValueSubject<State, Never> { get set }
     var itemsForCollection: CurrentValueSubject<[ItemCollectionViewCellType], FlickrPhotoError> { get set }
 }
 

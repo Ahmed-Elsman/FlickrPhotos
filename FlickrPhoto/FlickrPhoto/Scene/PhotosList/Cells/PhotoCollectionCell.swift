@@ -20,6 +20,8 @@ final class PhotoCollectionCell: UICollectionViewCell, CellReusable {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        photoImageView.kf.cancelDownloadTask()
+        photoImageView.image = nil
     }
     
     @available(*, unavailable)
@@ -29,10 +31,10 @@ final class PhotoCollectionCell: UICollectionViewCell, CellReusable {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupCellViews()
+        setupViews()
     }
     
-    private func setupCellViews() {
+    private func setupViews() {
         addSubview(photoImageView)
 
         NSLayoutConstraint.activate([
@@ -46,5 +48,26 @@ final class PhotoCollectionCell: UICollectionViewCell, CellReusable {
     }
 
     func configCell(photo: Photo) {
+        photoImageView.download(from: photo.imagePath, contentMode: .scaleAspectFit)
+    }
+}
+
+
+#warning("add this in another file")
+import Kingfisher
+
+extension UIImageView {
+
+    func download(from path: String, contentMode mode: UIView.ContentMode = .scaleAspectFill) {
+        guard let url = URL(string: path) else { return }
+        kf.indicatorType = .activity
+        kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "placeHolderImage"),
+            options: [
+                .transition(.fade(0.1)),
+                .memoryCacheExpiration(.seconds(200)),
+                .diskCacheExpiration(.seconds(200))
+            ])
     }
 }
