@@ -17,7 +17,7 @@ extension UIView {
         return indicatorView
     }
 
-    func showLoadingIndicator(tag: Tags.Loading = Tags.Loading.defaultLoadingIndicator, _ backgroundAlpha: CGFloat = 0.3) {
+    func showLoadingIndicator(tag: LoadingTags.Loading = LoadingTags.Loading.defaultLoadingIndicator, _ backgroundAlpha: CGFloat = 0.3) {
         guard viewWithTag(tag.rawValue) == nil else {
             if let loadingIndicator = viewWithTag(tag.rawValue) as? UIActivityIndicatorView {
                 loadingIndicator.startAnimating()
@@ -47,7 +47,7 @@ extension UIView {
 
     }
 
-    func dismissLoadingIndicator(tag: Tags.Loading =  Tags.Loading.defaultLoadingIndicator) {
+    func dismissLoadingIndicator(tag: LoadingTags.Loading =  LoadingTags.Loading.defaultLoadingIndicator) {
 
         DispatchQueue.main.async(execute: { [weak self] in
             guard let self = self else { return }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Tags {
+enum LoadingTags {
     enum Loading: Int {
         case defaultLoadingIndicator = 3
     }

@@ -84,7 +84,7 @@ final class EmptyPlaceHolderView: UIView {
         NSLayoutConstraint.activate([
             label.heightAnchor.constraint(equalToConstant: 20)
         ])
-        label.tag = Tags.Placeholder.mainTitle.rawValue
+        label.tag = LoadingTags.Placeholder.mainTitle.rawValue
         return label
     }
     
@@ -97,7 +97,7 @@ final class EmptyPlaceHolderView: UIView {
         NSLayoutConstraint.activate([
             label.heightAnchor.constraint(equalToConstant: 20)
         ])
-        label.tag = Tags.Placeholder.description.rawValue
+        label.tag = LoadingTags.Placeholder.description.rawValue
         return label
     }
     
