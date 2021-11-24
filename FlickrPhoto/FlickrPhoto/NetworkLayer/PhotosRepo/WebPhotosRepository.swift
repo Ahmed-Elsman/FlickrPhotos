@@ -12,7 +12,7 @@ final class WebPhotosRepository: PhotosRepository {
     
     let loader: Requestable
 
-    init(loader: APILoader = APILoader()) {
+    init(loader: Requestable = APILoader()) {
         self.loader =  loader
     }
     

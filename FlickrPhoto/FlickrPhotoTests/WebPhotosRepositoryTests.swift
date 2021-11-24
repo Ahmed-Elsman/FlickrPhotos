@@ -19,10 +19,10 @@ class WebPhotosRepositoryTests: XCTestCase {
         webPhotosRepository = WebPhotosRepository(loader: APILoader())
     }
     
-    func test_fetching_photos_success() {
+    func test_fetching_photos_success() throws {
         
         let promise = XCTestExpectation(description: "Fetching Photos Success")
-        try? webPhotosRepository.photos(for: "photo", page: 1)
+        try webPhotosRepository.photos(for: "photo", page: 1)
             .sink(receiveCompletion: { _ in }) { response in
                 guard let photos = response.photos?.photos else {
                     XCTFail("Fetching Photos failed")
@@ -35,10 +35,10 @@ class WebPhotosRepositoryTests: XCTestCase {
         wait(for: [promise], timeout: 15)
     }
     
-    func test_fetching_photos_fail() {
+    func test_fetching_photos_fail() throws {
         
         let promise = XCTestExpectation(description: "Fetching Photos Fail")
-        try? webPhotosRepository.photos(for: "شسيبللا", page: 1)
+        try webPhotosRepository.photos(for: "شسيبللا", page: 1)
             .sink(receiveCompletion: { _ in }) { response in
                 guard let photos = response.photos?.photos else {
                     XCTFail("Fetching Photos failed")
@@ -51,10 +51,10 @@ class WebPhotosRepositoryTests: XCTestCase {
         wait(for: [promise], timeout: 15)
     }
     
-    func test_fetch_first_photos() {
+    func test_fetch_first_photos() throws {
         
         let promise = XCTestExpectation(description: "Fetching First Photos Page")
-        try? webPhotosRepository.photos(for: "photo", page: 1)
+        try webPhotosRepository.photos(for: "photo", page: 1)
             .sink(receiveCompletion: { _ in }) { response in
                 let photos = response.photos?.photos
                 XCTAssertEqual(photos?.count, Constant.numberOfPhotosPerPage, "photos are equal to \(Constant.numberOfPhotosPerPage)")
@@ -65,10 +65,10 @@ class WebPhotosRepositoryTests: XCTestCase {
     }
     
     
-    func test_fetch_loadingMore_photos() {
+    func test_fetch_loadingMore_photos() throws {
         
         let promise = XCTestExpectation(description: "Fetching Second Photos Page")
-        try? webPhotosRepository.photos(for: "photo", page: 2)
+        try webPhotosRepository.photos(for: "photo", page: 2)
             .sink(receiveCompletion: { _ in }) { response in
                 XCTAssertEqual(response.photos?.photos.count, Constant.numberOfPhotosPerPage, "photos are equal to \(Constant.numberOfPhotosPerPage)")
                 promise.fulfill()
