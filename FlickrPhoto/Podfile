@@ -11,8 +11,4 @@ target 'FlickrPhoto' do
     # Pods for testing
   end
 
-  target 'FlickrPhotoUITests' do
-    # Pods for testing
-  end
-
 end

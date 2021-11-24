@@ -9,7 +9,11 @@ import Foundation
 import Combine
 
 
-final class APILoader {
+protocol Requestable {
+    func loadData<T: Decodable>(from url: URL) -> AnyPublisher<T, FlickrPhotoError>
+}
+
+final class APILoader: Requestable {
     
     func loadData<T: Decodable>(from url: URL) -> AnyPublisher<T, FlickrPhotoError> {
         return URLSession.shared

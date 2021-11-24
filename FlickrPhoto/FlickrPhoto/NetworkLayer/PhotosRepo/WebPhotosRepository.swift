@@ -10,7 +10,7 @@ import Combine
 
 final class WebPhotosRepository: PhotosRepository {
     
-    let loader: APILoader
+    let loader: Requestable
 
     init(loader: APILoader = APILoader()) {
         self.loader =  loader
