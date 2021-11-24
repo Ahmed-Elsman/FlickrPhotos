@@ -10,10 +10,10 @@ import Combine
 
 final class WebPhotosRepository: PhotosRepository {
     
-    let loader: Requestable
+    let provider: Requestable
 
-    init(loader: Requestable = APILoader()) {
-        self.loader =  loader
+    init(provider: Requestable = APIProvider()) {
+        self.provider =  provider
     }
     
     func photos(for query: String, page: Int) throws -> AnyPublisher<FlickrSearchResult, FlickrPhotoError> {
@@ -21,6 +21,6 @@ final class WebPhotosRepository: PhotosRepository {
               let url = URL(string: path) else {
                   throw FlickrPhotoError.wrongURL
               }
-        return loader.loadData(from: url)
+        return provider.loadData(from: url)
     }
 }

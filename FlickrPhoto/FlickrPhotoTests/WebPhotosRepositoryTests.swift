@@ -16,12 +16,49 @@ class WebPhotosRepositoryTests: XCTestCase {
     
     override func setUp() {
         subscriptions = []
-        webPhotosRepository = WebPhotosRepository(loader: APILoader())
     }
     
-    func test_fetching_photos_success() throws {
+    func test_FetchingPhotosFromFile_Success() throws {
         
-        let promise = XCTestExpectation(description: "Fetching Photos Success")
+        webPhotosRepository = WebPhotosRepository(provider: MockAPIProvider.createMockAPIProvider(fromJsonFile: "photosData", statusCode: 200, error: nil))
+    
+        let promise = XCTestExpectation(description: "Fetching Photos From File Success")
+        try webPhotosRepository.photos(for: "", page: 1)
+            .sink(receiveCompletion: { _ in }) { response in
+                guard let photos = response.photos?.photos else {
+                    XCTFail("Fetching Photos failed")
+                    return
+                }
+                XCTAssertGreaterThan(photos.count, 0)
+                promise.fulfill()
+            }.store(in: &subscriptions)
+        
+        wait(for: [promise], timeout: 1)
+    }
+    
+    func test_FetchingPhotosFromFile_Fail() throws {
+        
+        webPhotosRepository = WebPhotosRepository(provider: MockAPIProvider.createMockAPIProvider(fromJsonFile: "noData", statusCode: 200, error: nil))
+    
+        let promise = XCTestExpectation(description: "No Photos From File Fetched")
+        try webPhotosRepository.photos(for: "", page: 1)
+            .sink(receiveCompletion: { _ in }) { response in
+                guard let photos = response.photos?.photos else {
+                    XCTFail("Fetching Photos failed")
+                    return
+                }
+                XCTAssertEqual(photos.count, 0)
+                promise.fulfill()
+            }.store(in: &subscriptions)
+        
+        wait(for: [promise], timeout: 1)
+    }
+    
+    func test_FetchingPhotosFromApi_Success() throws {
+        
+        webPhotosRepository = WebPhotosRepository(provider: APIProvider())
+        
+        let promise = XCTestExpectation(description: "Fetching Photos From API Success")
         try webPhotosRepository.photos(for: "photo", page: 1)
             .sink(receiveCompletion: { _ in }) { response in
                 guard let photos = response.photos?.photos else {
@@ -35,9 +72,9 @@ class WebPhotosRepositoryTests: XCTestCase {
         wait(for: [promise], timeout: 15)
     }
     
-    func test_fetching_photos_fail() throws {
-        
-        let promise = XCTestExpectation(description: "Fetching Photos Fail")
+    func test_FetchingPhotosFromApi_Fail() throws {
+        webPhotosRepository = WebPhotosRepository(provider: APIProvider())
+        let promise = XCTestExpectation(description: "No Photos From API Fetched")
         try webPhotosRepository.photos(for: "شسيبللا", page: 1)
             .sink(receiveCompletion: { _ in }) { response in
                 guard let photos = response.photos?.photos else {
@@ -51,8 +88,8 @@ class WebPhotosRepositoryTests: XCTestCase {
         wait(for: [promise], timeout: 15)
     }
     
-    func test_fetch_first_photos() throws {
-        
+    func test_FetchingPhotosFromApiPaging() throws {
+        webPhotosRepository = WebPhotosRepository(provider: APIProvider())
         let promise = XCTestExpectation(description: "Fetching First Photos Page")
         try webPhotosRepository.photos(for: "photo", page: 1)
             .sink(receiveCompletion: { _ in }) { response in
@@ -65,8 +102,8 @@ class WebPhotosRepositoryTests: XCTestCase {
     }
     
     
-    func test_fetch_loadingMore_photos() throws {
-        
+    func test_LoadingMorePhotosFromApiPaging() throws {
+        webPhotosRepository = WebPhotosRepository(provider: APIProvider())
         let promise = XCTestExpectation(description: "Fetching Second Photos Page")
         try webPhotosRepository.photos(for: "photo", page: 2)
             .sink(receiveCompletion: { _ in }) { response in
