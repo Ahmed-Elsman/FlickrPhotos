@@ -7,6 +7,8 @@
 
 import Foundation
 
+#warning("I Need To convert it to combine.")
+
 protocol SearchHistoryRepository {
     func getSearchHistory() -> [String]
     func saveSearchKeyword(searchKeyword: String) -> [String]
