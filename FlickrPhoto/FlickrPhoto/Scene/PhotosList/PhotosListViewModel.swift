@@ -55,8 +55,8 @@ extension PhotosListViewModel: PhotosListViewModelInput {
         itemsForCollection.value = []
         self.page = 1
         self.canLoadMore = true
-        let userDetaultSearchHistoryRepository = UserDetaultSearchHistoryRepository()
-        userDetaultSearchHistoryRepository.saveSearchKeyword(searchKeyword: keyword)
+        let userDefaultSearchHistoryRepository = UserDefaultSearchHistoryRepository()
+        userDefaultSearchHistoryRepository.saveSearchKeyword(searchKeyword: keyword)
         getData(for: keyword)
     }
     
@@ -71,8 +71,8 @@ extension PhotosListViewModel: PhotosListViewModelInput {
     
     func getSearchHistory() {
         state.send(.searchHistory)
-        let userDetaultSearchHistoryRepository = UserDetaultSearchHistoryRepository()
-        let searchTerms = userDetaultSearchHistoryRepository.getSearchHistory()
+        let userDefaultSearchHistoryRepository = UserDefaultSearchHistoryRepository()
+        let searchTerms = userDefaultSearchHistoryRepository.getSearchHistory()
         itemsForCollection.send(createItemsForCollection(searchTerms: searchTerms))
     }
     
