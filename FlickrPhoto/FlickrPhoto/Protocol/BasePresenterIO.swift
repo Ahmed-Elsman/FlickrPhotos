@@ -23,46 +23,49 @@ protocol Loading {
 protocol BaseViewModelOutput: BaseDisplayLogic, Loading { }
 
 extension BaseDisplayLogic where Self: UIViewController {
-
+    
     func handle(error: FlickrPhotoError) {
         showError(error: error)
     }
-
+    
     func showError(error: Error) {
         showError(title: "Error Found", subtitle: error.localizedDescription)
     }
-
+    
     func showError(title: String, subtitle: String?) {
         showAlert(title: title, subtitle: subtitle, theme: .error)
     }
-
+    
     func showSuccess(title: String, subtitle: String?) {
         showAlert(title: title, subtitle: subtitle, theme: .success)
     }
-
+    
     func showAlert(title: String, subtitle: String?, theme: Theme) {
-        let view = MessageView.viewFromNib(layout: .cardView)
-        view.configureTheme(theme)
-        view.button?.isHidden = true
-        view.configureContent(title: title, body: subtitle ?? "")
-
-        var successConfig = SwiftMessages.defaultConfig
-        successConfig.presentationStyle = .center
-        successConfig.preferredStatusBarStyle = .lightContent
-        successConfig.presentationContext = .window(windowLevel: UIWindow.Level.normal)
-
-        SwiftMessages.show(config: successConfig, view: view)
+        
+        DispatchQueue.main.async {
+            let view = MessageView.viewFromNib(layout: .cardView)
+            view.configureTheme(theme)
+            view.button?.isHidden = true
+            view.configureContent(title: title, body: subtitle ?? "")
+            
+            var successConfig = SwiftMessages.defaultConfig
+            successConfig.presentationStyle = .center
+            successConfig.preferredStatusBarStyle = .lightContent
+            successConfig.presentationContext = .window(windowLevel: UIWindow.Level.normal)
+            
+            SwiftMessages.show(config: successConfig, view: view)
+        }
     }
 }
 
 extension UIViewController: BaseViewModelOutput {
-
+    
     func showLoading() {
         DispatchQueue.main.async {
             self.view.showLoadingIndicator()
         }
     }
-
+    
     func hideLoading() {
         DispatchQueue.main.async {
             self.view.dismissLoadingIndicator()

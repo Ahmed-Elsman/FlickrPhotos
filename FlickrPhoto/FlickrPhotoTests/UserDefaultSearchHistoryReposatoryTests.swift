@@ -12,11 +12,17 @@ import Combine
 class UserDefaultSearchHistoryReposatoryTests: XCTestCase {
     
     var userDefaultSearchHistoryRepository: UserDefaultSearchHistoryRepository!
-    var subscriptions = Set<AnyCancellable>()
+    var subscriptions: Set<AnyCancellable>!
     
     override func setUp() {
         userDefaultSearchHistoryRepository = UserDefaultSearchHistoryRepository()
-        subscriptions = []
+        subscriptions = Set<AnyCancellable>()
+    }
+    
+    override func tearDown() {
+        userDefaultSearchHistoryRepository =  nil
+        subscriptions = nil
+        super.tearDown()
     }
     
     func test_ClearHistorySuccess() {

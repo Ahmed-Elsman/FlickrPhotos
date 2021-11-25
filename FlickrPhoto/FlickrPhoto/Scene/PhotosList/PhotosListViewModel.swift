@@ -41,27 +41,33 @@ final class PhotosListViewModel {
     }
     
     private func setupBinding() {
-        state.delay(for: 0.5, scheduler: RunLoop.main)
-            .dropFirst()
+        state
             .removeDuplicates()
-            .setFailureType(to: FlickrPhotoError.self)
-            .flatMap { [unowned self] state -> AnyPublisher<[ItemCollectionViewCellType], FlickrPhotoError> in
+            .sink(receiveValue: { state in
                 switch state {
                 case .searchResult(let term, let page):
-                    searchHistoryRepository.saveSearchKeyword(searchKeyword: term)
-                    return self.getData(for: term, page: page)
+                    self.searchHistoryRepository.saveSearchKeyword(searchKeyword: term)
+                    self.bind(publisher: self.getData(for: term, page: page))
                 case .searchHistory:
-                    return self.getSearchHistory()
-                    
+                    self.bind(publisher: self.getSearchHistory())
                 }
-            }.compactMap { $0 }
-            .sink(receiveCompletion: { [unowned self] completion in
-                if case let .failure(error) = completion {
-                    self.emptyPlaceHolder.send(EmptyPlaceHolderType.error(message: error.localizedDescription))
-                }
-            }, receiveValue: { [unowned self] items in
-                self.itemsForCollection.send(items)
             }).store(in: &cancelableSet)
+       
+    }
+    
+    private func bind(publisher: AnyPublisher<[ItemCollectionViewCellType], FlickrPhotoError>) {
+        var cancelable: AnyCancellable?
+        cancelable = publisher.compactMap { $0 }
+        .receive(on: RunLoop.main)
+        .sink(receiveCompletion: { [unowned self] completion in
+            if case let .failure(error) = completion {
+                self.emptyPlaceHolder.send(EmptyPlaceHolderType.error(message: error.localizedDescription))
+            }
+        }, receiveValue: { [unowned self] items in
+            self.itemsForCollection.send(items)
+            cancelable?.cancel()
+        })
+        
     }
 }
 
@@ -77,13 +83,6 @@ extension PhotosListViewModel: PhotosListViewModelInput {
 }
 
 extension PhotosListViewModel {
-    
-    private func search(for keyword: String) {
-        itemsForCollection.value = []
-        canLoadMore = true
-        searchHistoryRepository.saveSearchKeyword(searchKeyword: keyword)
-        state.send(.searchResult(term: keyword, page: 1))
-    }
     
     private func getSearchHistory() -> AnyPublisher<[ItemCollectionViewCellType], FlickrPhotoError> {
         searchHistoryRepository.getSearchHistory()

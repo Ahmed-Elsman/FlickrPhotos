@@ -25,7 +25,6 @@ final class PhotosListViewController: UIViewController {
         setupSearchController()
         setupNavigationBar()
         setupBindings()
-        getSearchHistory()
     }
     
     // MARK: - Setup UI
@@ -103,16 +102,16 @@ final class PhotosListViewController: UIViewController {
             self.updateData(itemsForCollection: itemsForCollection)
         }).store(in: &cancelableSet)
         
-        viewModel?.state.removeDuplicates(by: { lhsState, rhsState in
+        viewModel?.state.dropFirst().removeDuplicates(by: { lhsState, rhsState in
             return PhotosListViewModel.State.isDublicated(lhsState: lhsState, rhsState: rhsState)
         }).sink(receiveValue: { [unowned self] _  in
             self.clearCollection()
         }).store(in: &cancelableSet)
         
-        viewModel?.emptyPlaceHolder
+        viewModel?.emptyPlaceHolder.dropFirst()
             .receive(on: RunLoop.main).sink { [unowned self] emptyPlaceHolderType in
-            self.emptyState(emptyPlaceHolderType: emptyPlaceHolderType)
-        }.store(in: &cancelableSet)
+                self.emptyState(emptyPlaceHolderType: emptyPlaceHolderType)
+            }.store(in: &cancelableSet)
     }
     
     private func emptyState(emptyPlaceHolderType: EmptyPlaceHolderType) {

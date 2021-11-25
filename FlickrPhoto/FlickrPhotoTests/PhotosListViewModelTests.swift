@@ -13,25 +13,17 @@ class PhotosListViewModelTests: XCTestCase {
     
     var webPhotosRepository: WebPhotosRepository!
     var photosListViewModel: PhotosListViewModel!
-    var subscriptions = Set<AnyCancellable>()
+    var subscriptions: Set<AnyCancellable>!
     
     override func setUp() {
-        subscriptions = []
+        subscriptions = Set<AnyCancellable>()
     }
     
-    func test_SearchFileSuccess() {
-        webPhotosRepository = WebPhotosRepository(provider: MockAPIProvider.createMockAPIProvider(fromJsonFile: "photosData", statusCode: 200, error: nil))
-        photosListViewModel = PhotosListViewModel(output: PhotosListViewController(), photosRepository: webPhotosRepository)
-        let promise = XCTestExpectation(description: "Fetching Photos From File Success")
-        photosListViewModel.state.send(.searchResult(term: "", page: 1))
-        photosListViewModel.itemsForCollection.dropFirst().sink(receiveCompletion: {  _ in
-            XCTFail("Fetching Fail")
-        }, receiveValue: { response in
-            XCTAssertGreaterThan(response.count, 0)
-            promise.fulfill()
-        }).store(in: &subscriptions)
-        
-        wait(for: [promise], timeout: 3)
+    override func tearDown() {
+        webPhotosRepository =  nil
+        photosListViewModel = nil
+        subscriptions = nil
+        super.tearDown()
     }
     
     func test_SearchFileFail() {
@@ -43,6 +35,21 @@ class PhotosListViewModelTests: XCTestCase {
             XCTFail("Fetching Fail")
         }, receiveValue: { response in
             XCTAssertEqual(response.count, 0)
+            promise.fulfill()
+        }).store(in: &subscriptions)
+        
+        wait(for: [promise], timeout: 3)
+    }
+    
+    func test_SearchFileSuccess() {
+        webPhotosRepository = WebPhotosRepository(provider: MockAPIProvider.createMockAPIProvider(fromJsonFile: "photosData", statusCode: 200, error: nil))
+        photosListViewModel = PhotosListViewModel(output: PhotosListViewController(), photosRepository: webPhotosRepository)
+        let promise = XCTestExpectation(description: "Fetching Photos From File Success")
+        photosListViewModel.state.send(.searchResult(term: "", page: 1))
+        photosListViewModel.itemsForCollection.dropFirst().sink(receiveCompletion: {  _ in
+            XCTFail("Fetching Fail")
+        }, receiveValue: { response in
+            XCTAssertGreaterThan(response.count, 0)
             promise.fulfill()
         }).store(in: &subscriptions)
         

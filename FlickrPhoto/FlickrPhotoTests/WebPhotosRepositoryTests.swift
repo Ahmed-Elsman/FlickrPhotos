@@ -12,10 +12,16 @@ import Combine
 class WebPhotosRepositoryTests: XCTestCase {
     
     var webPhotosRepository: WebPhotosRepository!
-    var subscriptions = Set<AnyCancellable>()
+    var subscriptions: Set<AnyCancellable>!
     
     override func setUp() {
-        subscriptions = []
+        subscriptions = Set<AnyCancellable>()
+    }
+    
+    override func tearDown() {
+        webPhotosRepository =  nil
+        subscriptions = nil
+        super.tearDown()
     }
     
     func test_FetchingPhotosFromFile_Success() throws {
