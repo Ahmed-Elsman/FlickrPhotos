@@ -26,7 +26,9 @@
 ### Built With
 
 
-* **MVVM** with **combine && UIKit**.
+* **MVVM** with **combine & UIKit**.
+
+* **Unit Tests** applied for **(WebPhotos & UserDefaultSearchHistory) Reposatories & PhotosListViewModel**.
 
 * [SwiftLint](https://github.com/realm/SwiftLint) used for correcting code.
 
@@ -47,7 +49,7 @@ Follow Steps for running app
    ```sh
    pod install
    ```
-4. Enter your API_KEY in `Constants.swift`
+4. You Can change API_ KEY in `Constants.swift` with yours if this became not valid any more
    ```js
    static let API_KEY: String = 'ENTER YOUR API'
    ```
