@@ -7,7 +7,14 @@
 
 import Foundation
 
-final class SearchHistoryRepository {
+
+protocol SearchHistoryRepository {
+    func getSearchHistory() -> [String]
+    func saveSearchKeyword(searchKeyword: String) -> [String]
+    func clearSearchHistory() -> [String]
+}
+
+final class UserDetaultSearchHistoryRepository: SearchHistoryRepository {
     
     func getSearchHistory() -> [String] {
         if let history = UserDefaults.standard.array(forKey: UserDefaultsKey.searchHistoryOfPhotos.rawValue) as? [String] {

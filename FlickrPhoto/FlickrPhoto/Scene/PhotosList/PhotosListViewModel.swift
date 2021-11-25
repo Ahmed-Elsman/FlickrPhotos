@@ -27,7 +27,7 @@ enum State {
 final class PhotosListViewModel {
     
     private weak var output: BaseViewModelOutput?
-    let photosRepository: WebPhotosRepository
+    let photosRepository: PhotosRepository
     
     fileprivate var page: Int = 1
     fileprivate var canLoadMore = true
@@ -37,7 +37,7 @@ final class PhotosListViewModel {
     var cancelableSet: Set<AnyCancellable> =  Set<AnyCancellable>()
     var emptyPlaceHolder = CurrentValueSubject<EmptyPlaceHolderType, Never>(.startSearch)
     
-    init(output: BaseViewModelOutput, photosRepository: WebPhotosRepository = WebPhotosRepository()) {
+    init(output: BaseViewModelOutput, photosRepository: PhotosRepository = WebPhotosRepository()) {
         self.output = output
         self.photosRepository = photosRepository
         [Notifications.Reachability.connected.name, Notifications.Reachability.notConnected.name].forEach { (notification) in
@@ -55,8 +55,8 @@ extension PhotosListViewModel: PhotosListViewModelInput {
         itemsForCollection.value = []
         self.page = 1
         self.canLoadMore = true
-        let searchHistoryRepository = SearchHistoryRepository()
-        searchHistoryRepository.saveSearchKeyword(searchKeyword: keyword)
+        let userDetaultSearchHistoryRepository = UserDetaultSearchHistoryRepository()
+        userDetaultSearchHistoryRepository.saveSearchKeyword(searchKeyword: keyword)
         getData(for: keyword)
     }
     
@@ -71,8 +71,8 @@ extension PhotosListViewModel: PhotosListViewModelInput {
     
     func getSearchHistory() {
         state.send(.searchHistory)
-        let searchHistoryRepository = SearchHistoryRepository()
-        let searchTerms = searchHistoryRepository.getSearchHistory()
+        let userDetaultSearchHistoryRepository = UserDetaultSearchHistoryRepository()
+        let searchTerms = userDetaultSearchHistoryRepository.getSearchHistory()
         itemsForCollection.send(createItemsForCollection(searchTerms: searchTerms))
     }
     
