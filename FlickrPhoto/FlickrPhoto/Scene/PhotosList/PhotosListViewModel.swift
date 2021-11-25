@@ -18,7 +18,6 @@ protocol PhotosListViewModelInput: AnyObject {
     func getSearchHistory()
 }
 
-
 enum State {
     case searchResult(term: String)
     case searchHistory
@@ -45,7 +44,6 @@ final class PhotosListViewModel {
         }
     }
 }
-
 
 // MARK: - PhotosListViewModelInput
 extension PhotosListViewModel: PhotosListViewModelInput {
