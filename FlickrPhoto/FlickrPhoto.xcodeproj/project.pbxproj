@@ -17,6 +17,7 @@
 		274C5F21274E6BA00034AEF0 /* photosData.json in Resources */ = {isa = PBXBuildFile; fileRef = 274C5F1E274E6BA00034AEF0 /* photosData.json */; };
 		274C5F22274E6BA00034AEF0 /* noData.json in Resources */ = {isa = PBXBuildFile; fileRef = 274C5F1F274E6BA00034AEF0 /* noData.json */; };
 		2756EB7F274F645000561AEF /* UserDefaultSearchHistoryReposatory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2756EB7E274F645000561AEF /* UserDefaultSearchHistoryReposatory.swift */; };
+		2756EB81274F679800561AEF /* UICollectionView+PlaceHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2756EB80274F679800561AEF /* UICollectionView+PlaceHolder.swift */; };
 		27BD2E2D274A7814001B950D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E2C274A7814001B950D /* AppDelegate.swift */; };
 		27BD2E2F274A7B16001B950D /* PhotosListBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E2E274A7B16001B950D /* PhotosListBuilder.swift */; };
 		27BD2E31274A7BC6001B950D /* PhotosListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BD2E30274A7BC6001B950D /* PhotosListViewModel.swift */; };
@@ -73,6 +74,7 @@
 		274C5F1E274E6BA00034AEF0 /* photosData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = photosData.json; sourceTree = "<group>"; };
 		274C5F1F274E6BA00034AEF0 /* noData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = noData.json; sourceTree = "<group>"; };
 		2756EB7E274F645000561AEF /* UserDefaultSearchHistoryReposatory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultSearchHistoryReposatory.swift; sourceTree = "<group>"; };
+		2756EB80274F679800561AEF /* UICollectionView+PlaceHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+PlaceHolder.swift"; sourceTree = "<group>"; };
 		27BD2E2C274A7814001B950D /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27BD2E2E274A7B16001B950D /* PhotosListBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListBuilder.swift; sourceTree = "<group>"; };
 		27BD2E30274A7BC6001B950D /* PhotosListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosListViewModel.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 				27BD2E64274B89BA001B950D /* UIImageViewDownloader.swift */,
 				27BD2E66274B8A4A001B950D /* Reachability.swift */,
 				27BD2E68274B8ABB001B950D /* NotificationType.swift */,
+				2756EB80274F679800561AEF /* UICollectionView+PlaceHolder.swift */,
 			);
 			path = Extentions;
 			sourceTree = "<group>";
@@ -525,6 +528,7 @@
 				27BD2E39274A824D001B950D /* FlickrSearchResult.swift in Sources */,
 				27BD2E61274B8922001B950D /* ItemCollectionViewCellType.swift in Sources */,
 				27BD2E67274B8A4A001B950D /* Reachability.swift in Sources */,
+				2756EB81274F679800561AEF /* UICollectionView+PlaceHolder.swift in Sources */,
 				27BD2E69274B8ABB001B950D /* NotificationType.swift in Sources */,
 				27BD2E6C274B8E3F001B950D /* PlaceHolderView.swift in Sources */,
 				27BD2E48274A8C46001B950D /* PhotosCollectionDataSource.swift in Sources */,
