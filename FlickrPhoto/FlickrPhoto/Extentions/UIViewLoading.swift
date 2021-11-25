@@ -9,15 +9,16 @@ import Foundation
 import UIKit
 
 extension UIView {
+
     private var loadingIndicatorView: UIActivityIndicatorView {
         let style: UIActivityIndicatorView.Style = .medium
         let indicatorView = UIActivityIndicatorView(style: style)
-        indicatorView.color = .systemPink
+        indicatorView.color = .systemBlue
         indicatorView.translatesAutoresizingMaskIntoConstraints = false
         return indicatorView
     }
 
-    func showLoadingIndicator(tag: LoadingTags.Loading = LoadingTags.Loading.defaultLoadingIndicator, _ backgroundAlpha: CGFloat = 0.3) {
+    func showLoadingIndicator(tag: Tags.Loading = Tags.Loading.defaultLoadingIndicator, _ backgroundAlpha: CGFloat = 0.3) {
         guard viewWithTag(tag.rawValue) == nil else {
             if let loadingIndicator = viewWithTag(tag.rawValue) as? UIActivityIndicatorView {
                 loadingIndicator.startAnimating()
@@ -44,19 +45,13 @@ extension UIView {
         layoutIfNeeded()
 
         loadingView.startAnimating()
-
     }
 
-    func dismissLoadingIndicator(tag: LoadingTags.Loading =  LoadingTags.Loading.defaultLoadingIndicator) {
-
-        DispatchQueue.main.async(execute: { [weak self] in
-            guard let self = self else { return }
-            while self.viewWithTag(tag.rawValue) != nil {
-                self.viewWithTag(tag.rawValue)?.removeFromSuperview()
-            }
-        })
+    func dismissLoadingIndicator(tag: Tags.Loading = Tags.Loading.defaultLoadingIndicator) {
+        while viewWithTag(tag.rawValue) != nil {
+            viewWithTag(tag.rawValue)?.removeFromSuperview()
+        }
     }
-
 }
 
 extension UIViewController {

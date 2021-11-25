@@ -38,7 +38,7 @@ final class HeaderCollectionCell: UICollectionReusableView, CellReusable {
             heaerLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
-        backgroundColor = .secondarySystemBackground
+        backgroundColor = .tertiarySystemBackground
     }
 
     func configCell(searchTerm: String) {
