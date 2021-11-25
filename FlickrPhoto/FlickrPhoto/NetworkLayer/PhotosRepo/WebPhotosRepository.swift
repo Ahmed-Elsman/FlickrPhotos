@@ -16,10 +16,10 @@ final class WebPhotosRepository: PhotosRepository {
         self.provider =  provider
     }
 
-    func photos(for query: String, page: Int) throws -> AnyPublisher<FlickrSearchResult, FlickrPhotoError> {
+    func photos(for query: String, page: Int)  -> AnyPublisher<FlickrSearchResult, FlickrPhotoError> {
         guard let path = APILinksBuilder.API.search(searchKeyword: query, photosPerPage: Constant.numberOfPhotosPerPage, page: page).path,
               let url = URL(string: path) else {
-                  throw FlickrPhotoError.wrongURL
+                  return Fail(error: FlickrPhotoError.wrongURL).eraseToAnyPublisher()
               }
         return provider.loadData(from: url)
     }

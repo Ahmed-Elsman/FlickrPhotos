@@ -9,5 +9,5 @@ import Foundation
 import Combine
 
 protocol PhotosRepository {
-    func photos(for query: String, page: Int) throws -> AnyPublisher<FlickrSearchResult, FlickrPhotoError>
+    func photos(for query: String, page: Int) -> AnyPublisher<FlickrSearchResult, FlickrPhotoError>
 }

@@ -40,7 +40,3 @@ final class UserDefaultSearchHistoryRepository: SearchHistoryRepository {
         searchHistorySubject.send([])
     }
 }
-
-enum UserDefaultsKey: String {
-    case photosSearchHistory
-}

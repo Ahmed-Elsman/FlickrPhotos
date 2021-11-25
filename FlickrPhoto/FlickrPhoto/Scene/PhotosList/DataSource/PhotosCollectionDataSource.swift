@@ -97,7 +97,7 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if case .photo = itemsForCollection[indexPath.row], indexPath.row == itemsForCollection.count - 1 {
-            let pageToGet = Int(indexPath.row / Constant.numberOfPhotosPerPage) + 1
+            let pageToGet = Int((Float(indexPath.row) / Float(Constant.numberOfPhotosPerPage)).rounded(.up)) + 1
             viewModelInput?.loadMoreData(pageToGet)
         }
     }

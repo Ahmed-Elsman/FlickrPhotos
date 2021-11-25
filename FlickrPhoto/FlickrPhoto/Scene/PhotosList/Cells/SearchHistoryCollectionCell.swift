@@ -26,7 +26,7 @@ final class SearchHistoryCollectionCell: UICollectionViewCell, CellReusable {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-        backgroundColor = .systemBackground
+        backgroundColor = .secondarySystemBackground
     }
 
     private func setupViews() {

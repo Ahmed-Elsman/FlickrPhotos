@@ -8,19 +8,17 @@
 import UIKit
 import Combine
 
-class PhotosListViewController: UIViewController {
-
-
-    // MARK: - Outlets
+final class PhotosListViewController: UIViewController {
+    
     private lazy var photosCollectionView: UICollectionView = createCollectionView()
     private let searchController = UISearchController(searchResultsController: nil)
-
+    
     var viewModel: PhotosListViewModelInput?
     private(set) var collectionDataSource: PhotosCollectionViewDataSource?
-    var cancelableSet = Set<AnyCancellable>()
-
+    private var cancelableSet = Set<AnyCancellable>()
+    
     // MARK: - View lifeCycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -29,11 +27,11 @@ class PhotosListViewController: UIViewController {
         setupBindings()
         getSearchHistory()
     }
-
+    
     // MARK: - Setup UI
-
+    
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.addSubview(photosCollectionView)
         NSLayoutConstraint.activate([
             photosCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -42,24 +40,24 @@ class PhotosListViewController: UIViewController {
             photosCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-
+    
     private func setupNavigationBar() {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.label]
         navigationItem.title = "Fliker Photos"
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = .white
+        appearance.backgroundColor = .systemBackground
         appearance.titleTextAttributes = [.foregroundColor: UIColor.label]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.label]
         appearance.shadowColor = .clear
         appearance.shadowImage = UIImage()
-
-        navigationController?.navigationBar.tintColor = .white
+        
+        navigationController?.navigationBar.tintColor = .systemBackground
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.hidesBarsOnSwipe = true
     }
-
+    
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -75,25 +73,24 @@ class PhotosListViewController: UIViewController {
         collectionView.register(HeaderCollectionCell.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: HeaderCollectionCell.identifier)
-        collectionView.tag = 1
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .systemBackground
         return collectionView
     }
-
+    
     private func setupSearchController() {
         searchController.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        searchController.searchBar.tintColor = .black
+        searchController.searchBar.tintColor = .tertiarySystemBackground
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
         extendedLayoutIncludesOpaqueBars = true
         edgesForExtendedLayout = .all
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Write Keyword to search"
+        searchController.searchBar.placeholder = "Write keyword to search"
         definesPresentationContext = true
     }
-
+    
     private func setupBindings() {
         viewModel?.itemsForCollection.sink(receiveCompletion: { [unowned self] completion in
             switch completion {
@@ -105,23 +102,26 @@ class PhotosListViewController: UIViewController {
         }, receiveValue: { [unowned self] itemsForCollection in
             self.updateData(itemsForCollection: itemsForCollection)
         }).store(in: &cancelableSet)
-
-        viewModel?.state.removeDuplicates().sink(receiveValue: { [unowned self] _  in
+        
+        viewModel?.state.removeDuplicates(by: { lhsState, rhsState in
+            return PhotosListViewModel.State.isDublicated(lhsState: lhsState, rhsState: rhsState)
+        }).sink(receiveValue: { [unowned self] _  in
             self.clearCollection()
         }).store(in: &cancelableSet)
-
-        viewModel?.emptyPlaceHolder.sink { [unowned self] emptyPlaceHolderType in
+        
+        viewModel?.emptyPlaceHolder
+            .receive(on: RunLoop.main).sink { [unowned self] emptyPlaceHolderType in
             self.emptyState(emptyPlaceHolderType: emptyPlaceHolderType)
         }.store(in: &cancelableSet)
     }
-
+    
     private func emptyState(emptyPlaceHolderType: EmptyPlaceHolderType) {
         clearCollection()
         photosCollectionView.setEmptyView(emptyPlaceHolderType: emptyPlaceHolderType, completionBlock: { [weak self] in
             self?.search()
         })
     }
-
+    
     private func updateData(error: Error) {
         switch error as? FlickrPhotoError {
         case .noResults:
@@ -132,18 +132,18 @@ class PhotosListViewController: UIViewController {
             emptyState(emptyPlaceHolderType: .error(message: error.localizedDescription))
         }
     }
-
+    
     private func updateData(itemsForCollection: [ItemCollectionViewCellType]) {
-
-       if case let .searchResult(term, _) = viewModel?.state.value {
+        
+        if case let .searchResult(term, _) = viewModel?.state.value {
             searchController.searchBar.text = term
         }
-
+        
         guard !itemsForCollection.isEmpty else {
             showReadyToSearch()
             return
         }
-
+        
         if collectionDataSource == nil {
             photosCollectionView.restore()
             collectionDataSource = PhotosCollectionViewDataSource(viewModelInput: viewModel, itemsForCollection: itemsForCollection)
@@ -154,38 +154,36 @@ class PhotosListViewController: UIViewController {
             let fromIndex = collectionDataSource?.itemsForCollection.count ?? 0
             collectionDataSource?.itemsForCollection.append(contentsOf: itemsForCollection)
             let toIndex = collectionDataSource?.itemsForCollection.count ?? 0
-
+            
             guard fromIndex < toIndex else { return }
             let indexes = (fromIndex ..< toIndex).map { row -> IndexPath in
                 return IndexPath(row: row, section: 0)
             }
-
+            
             photosCollectionView.performBatchUpdates {
                 photosCollectionView.insertItems(at: indexes)
             }
         }
     }
-
-
+    
     private func search() {
         if let text = searchController.searchBar.text, !text.isEmpty, text.count >= 3 {
             clearCollection()
-            viewModel?.state.send(.searchResult(term: text, page: 1))
+            viewModel?.state.send(PhotosListViewModel.State.searchResult(term: text, page: 1))
         }
     }
-
+    
     private func getSearchHistory() {
-        clearCollection()
-        viewModel?.state.send(.searchHistory)
+        viewModel?.state.send(PhotosListViewModel.State.searchHistory)
     }
-
-
+    
     private func clearCollection() {
         collectionDataSource = nil
         photosCollectionView.dataSource = nil
         photosCollectionView.dataSource = nil
         photosCollectionView.reloadData()
     }
+    
     private func showReadyToSearch() {
         photosCollectionView.setEmptyView(emptyPlaceHolderType: .startSearch, completionBlock: { [weak self] in
             self?.searchController.isActive = true
@@ -214,19 +212,19 @@ extension PhotosListViewController: UITextFieldDelegate {
 // MARK: UISearchControllerDelegate
 extension PhotosListViewController: UISearchControllerDelegate {
     func didPresentSearchController(_ searchController: UISearchController) {
-            searchController.searchBar.becomeFirstResponder()
-            getSearchHistory()
+        searchController.searchBar.becomeFirstResponder()
+        getSearchHistory()
     }
-
+    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
-
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         search()
     }
-
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             getSearchHistory()
