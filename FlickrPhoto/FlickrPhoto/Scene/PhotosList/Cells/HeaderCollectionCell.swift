@@ -37,7 +37,7 @@ final class HeaderCollectionCell: UICollectionReusableView, CellReusable {
             heaerLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             heaerLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-        
+
         backgroundColor = .secondarySystemBackground
     }
 

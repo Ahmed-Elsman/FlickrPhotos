@@ -8,7 +8,7 @@
 import UIKit
 
 final class SearchHistoryCollectionCell: UICollectionViewCell, CellReusable {
-    
+
     private var searchKeywordLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .bold)
@@ -17,21 +17,21 @@ final class SearchHistoryCollectionCell: UICollectionViewCell, CellReusable {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
         backgroundColor = .systemBackground
     }
-    
+
     private func setupViews() {
         addSubview(searchKeywordLabel)
-        
+
         NSLayoutConstraint.activate([
             searchKeywordLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             searchKeywordLabel.topAnchor.constraint(equalTo: topAnchor),
@@ -43,6 +43,5 @@ final class SearchHistoryCollectionCell: UICollectionViewCell, CellReusable {
     func configCell(searchTerm: String) {
         searchKeywordLabel.text = searchTerm
     }
-    
-}
 
+}

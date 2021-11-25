@@ -17,23 +17,23 @@ final class PhotoCollectionCell: UICollectionViewCell, CellReusable {
         imageView.clipsToBounds = true
         return imageView
     }()
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         photoImageView.kf.cancelDownloadTask()
         photoImageView.image = nil
     }
-    
+
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
     }
-    
+
     private func setupViews() {
         addSubview(photoImageView)
 
@@ -44,7 +44,7 @@ final class PhotoCollectionCell: UICollectionViewCell, CellReusable {
             photoImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             photoImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-        
+
     }
 
     func configCell(photo: Photo) {

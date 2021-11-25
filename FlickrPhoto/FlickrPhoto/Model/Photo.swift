@@ -17,7 +17,7 @@ struct Photo: Decodable {
         case secret
         case server
     }
-    
+
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let farm = try values.decode(Int.self, forKey: .farm)

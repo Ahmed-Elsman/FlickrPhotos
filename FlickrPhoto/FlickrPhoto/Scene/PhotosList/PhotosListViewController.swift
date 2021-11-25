@@ -10,7 +10,7 @@ import Combine
 
 class PhotosListViewController: UIViewController {
 
-    
+
     // MARK: - Outlets
     private lazy var photosCollectionView: UICollectionView = createCollectionView()
     private let searchController = UISearchController(searchResultsController: nil)
@@ -18,9 +18,9 @@ class PhotosListViewController: UIViewController {
     var viewModel: PhotosListViewModelInput?
     private(set) var collectionDataSource: PhotosCollectionViewDataSource?
     var cancelableSet = Set<AnyCancellable>()
-    
+
     // MARK: - View lifeCycle
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -29,10 +29,10 @@ class PhotosListViewController: UIViewController {
         setupBindings()
         getSearchHistory()
     }
-    
-    
+
+
     // MARK: - Setup UI
-    
+
     private func setupUI() {
         view.backgroundColor = .white
         view.addSubview(photosCollectionView)
@@ -43,7 +43,7 @@ class PhotosListViewController: UIViewController {
             photosCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-    
+
     private func setupNavigationBar() {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.label]
         navigationItem.title = "Fliker Photos"
@@ -60,7 +60,7 @@ class PhotosListViewController: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.hidesBarsOnSwipe = true
     }
-    
+
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -80,7 +80,7 @@ class PhotosListViewController: UIViewController {
         collectionView.backgroundColor = .white
         return collectionView
     }
-    
+
     private func setupSearchController() {
         searchController.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -94,7 +94,7 @@ class PhotosListViewController: UIViewController {
         searchController.searchBar.placeholder = "Write Keyword to search"
         definesPresentationContext = true
     }
-    
+
     private func setupBindings() {
         viewModel?.itemsForCollection.sink(receiveCompletion: { [unowned self] completion in
             switch completion {
@@ -107,7 +107,7 @@ class PhotosListViewController: UIViewController {
             self.updateData(itemsForCollection: itemsForCollection)
         }).store(in: &cancelableSet)
 
-        viewModel?.state.sink { [unowned self] state in
+        viewModel?.state.sink { [unowned self] _ in
             self.clearCollection()
         }.store(in: &cancelableSet)
 
@@ -135,19 +135,19 @@ class PhotosListViewController: UIViewController {
             emptyState(emptyPlaceHolderType: .error(message: error.localizedDescription))
         }
     }
-    
+
     private func updateData(itemsForCollection: [ItemCollectionViewCellType]) {
-        
+
         if case let .searchResult(term) = viewModel?.state.value {
             searchController.searchBar.text = term
         }
         photosCollectionView.restore()
-        
+
         guard !itemsForCollection.isEmpty else {
             showReadyToSearch()
             return
         }
-        
+
         if collectionDataSource == nil {
             collectionDataSource = PhotosCollectionViewDataSource(viewModelInput: viewModel, itemsForCollection: itemsForCollection)
             photosCollectionView.dataSource = collectionDataSource
@@ -168,18 +168,18 @@ class PhotosListViewController: UIViewController {
             }
         }
     }
-    
+
     private func clearCollection() {
         collectionDataSource = nil
         photosCollectionView.dataSource = nil
         photosCollectionView.dataSource = nil
         photosCollectionView.reloadData()
     }
-    
+
     private func getSearchHistory() {
         viewModel?.getSearchHistory()
     }
-    
+
     private func showReadyToSearch() {
         photosCollectionView.setEmptyView(emptyPlaceHolderType: .startSearch, completionBlock: { [weak self] in
             self?.searchController.isActive = true

@@ -6,6 +6,7 @@ target 'FlickrPhoto' do
   # Pods for FlickrPhoto
    pod 'Kingfisher'
    pod 'SwiftMessages'
+   pod 'SwiftLint'
   target 'FlickrPhotoTests' do
     inherit! :search_paths
     # Pods for testing

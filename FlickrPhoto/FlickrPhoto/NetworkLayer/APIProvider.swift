@@ -13,11 +13,11 @@ protocol Requestable {
 }
 
 final class APIProvider: Requestable {
-    
+
     func loadData<T: Decodable>(from url: URL) -> AnyPublisher<T, FlickrPhotoError> {
         return URLSession.shared
             .dataTaskPublisher(for: url)
-            .tryMap() { element -> Data in
+            .tryMap { element -> Data in
                 guard let httpResponse = element.response as? HTTPURLResponse,
                       httpResponse.statusCode == 200 else {
                           throw URLError(.badServerResponse)
@@ -32,4 +32,3 @@ final class APIProvider: Requestable {
             .eraseToAnyPublisher()
     }
 }
-

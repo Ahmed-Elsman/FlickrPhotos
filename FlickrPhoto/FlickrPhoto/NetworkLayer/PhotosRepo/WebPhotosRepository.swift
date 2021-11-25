@@ -9,13 +9,13 @@ import Foundation
 import Combine
 
 final class WebPhotosRepository: PhotosRepository {
-    
+
     let provider: Requestable
 
     init(provider: Requestable = APIProvider()) {
         self.provider =  provider
     }
-    
+
     func photos(for query: String, page: Int) throws -> AnyPublisher<FlickrSearchResult, FlickrPhotoError> {
         guard let path = APILinksBuilder.API.search(searchKeyword: query, photosPerPage: Constant.numberOfPhotosPerPage, page: page).path,
               let url = URL(string: path) else {

@@ -8,7 +8,7 @@
 import Foundation
 
 struct PhotosListBuilder {
-    
+
     static func viewController() -> PhotosListViewController {
         let viewController: PhotosListViewController = PhotosListViewController()
         viewController.viewModel = PhotosListViewModel(output: viewController)

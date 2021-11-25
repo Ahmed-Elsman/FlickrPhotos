@@ -14,7 +14,7 @@ struct FlickrSearchResult: Decodable {
     private enum CodingKeys: String, CodingKey {
         case photos
     }
-    
+
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         photos = try? values.decodeIfPresent(Photos.self, forKey: .photos)

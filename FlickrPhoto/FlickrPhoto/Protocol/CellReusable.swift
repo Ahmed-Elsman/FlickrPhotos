@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 protocol CellReusable {
     static var identifier: String { get }
 }

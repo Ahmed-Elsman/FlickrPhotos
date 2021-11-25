@@ -8,7 +8,7 @@
 import Foundation
 
 struct APILinksBuilder {
-    
+
     static let apiKey: String = "7ae5dd61ab369ce45e5cba1f5e947059"
     private static let baseURL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=\(apiKey)&format=json&nojsoncallback=1"
 
