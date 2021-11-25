@@ -12,23 +12,31 @@ protocol PhotosListViewModelInput: AnyObject {
     var state: CurrentValueSubject<State, Never> { get set }
     var itemsForCollection: CurrentValueSubject<[ItemCollectionViewCellType], FlickrPhotoError> { get set }
     var emptyPlaceHolder: CurrentValueSubject<EmptyPlaceHolderType, Never> { get set }
-
-    func search(for text: String)
     func loadMoreData(_ page: Int)
-    func getSearchHistory()
 }
 
-enum State {
-    case searchResult(term: String)
+
+enum State: Equatable {
+
+    case searchResult(term: String, page: Int)
     case searchHistory
+
+    static func ==(lhs: State, rhs: State) -> Bool {
+        switch (lhs, rhs) {
+        case (.searchResult, .searchResult), (.searchHistory, .searchHistory):
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 final class PhotosListViewModel {
 
     private weak var output: BaseViewModelOutput?
     let photosRepository: PhotosRepository
+    let searchHistoryRepository: SearchHistoryRepository
 
-    fileprivate var page: Int = 1
     fileprivate var canLoadMore = true
 
     var itemsForCollection = CurrentValueSubject<[ItemCollectionViewCellType], FlickrPhotoError>([])
@@ -36,48 +44,66 @@ final class PhotosListViewModel {
     var cancelableSet: Set<AnyCancellable> =  Set<AnyCancellable>()
     var emptyPlaceHolder = CurrentValueSubject<EmptyPlaceHolderType, Never>(.startSearch)
 
-    init(output: BaseViewModelOutput, photosRepository: PhotosRepository = WebPhotosRepository()) {
+    init(output: BaseViewModelOutput,
+         photosRepository: PhotosRepository = WebPhotosRepository(),
+         searchHistoryRepository: SearchHistoryRepository = UserDefaultSearchHistoryRepository()) {
         self.output = output
         self.photosRepository = photosRepository
+        self.searchHistoryRepository = searchHistoryRepository
         [Notifications.Reachability.connected.name, Notifications.Reachability.notConnected.name].forEach { (notification) in
             NotificationCenter.default.addObserver(self, selector: #selector(changeInternetStatus), name: notification, object: nil)
         }
+
+        state.dropFirst()
+            .setFailureType(to: FlickrPhotoError.self)
+            .flatMap { [unowned self] state -> AnyPublisher<[ItemCollectionViewCellType], FlickrPhotoError> in
+                switch state {
+                case .searchResult(let term, let page):
+                    searchHistoryRepository.saveSearchKeyword(searchKeyword: term)
+                    return self.getData(for: term, page: page)
+                case .searchHistory:
+                    return self.getSearchHistory()
+
+                }
+            }.compactMap { $0 }
+            .sink(receiveCompletion: { completion in
+                print(completion)
+            }, receiveValue: { items in
+                self.itemsForCollection.send(items)
+            }).store(in: &cancelableSet)
     }
 }
+
 
 // MARK: - PhotosListViewModelInput
 extension PhotosListViewModel: PhotosListViewModelInput {
 
     func search(for keyword: String) {
-        state.send(.searchResult(term: keyword))
         itemsForCollection.value = []
-        self.page = 1
         self.canLoadMore = true
-        let userDefaultSearchHistoryRepository = UserDefaultSearchHistoryRepository()
-        userDefaultSearchHistoryRepository.saveSearchKeyword(searchKeyword: keyword)
-        getData(for: keyword)
+        let searchHistoryRepository = UserDefaultSearchHistoryRepository()
+        searchHistoryRepository.saveSearchKeyword(searchKeyword: keyword)
+        state.send(.searchResult(term: keyword, page: 1))
     }
 
     func loadMoreData(_ page: Int) {
-        if self.page <= page && canLoadMore == true {
-            self.page = page
-            if case .searchResult(let query) = state.value {
-                getData(for: query)
-            }
+        if case .searchResult(let query, let pageValue) = state.value, pageValue <= page && canLoadMore == true {
+            state.send(.searchResult(term: query, page: page))
         }
     }
 
-    func getSearchHistory() {
-        state.send(.searchHistory)
-        let userDefaultSearchHistoryRepository = UserDefaultSearchHistoryRepository()
-        let searchTerms = userDefaultSearchHistoryRepository.getSearchHistory()
-        itemsForCollection.send(createItemsForCollection(searchTerms: searchTerms))
+    func getSearchHistory() -> AnyPublisher<[ItemCollectionViewCellType], FlickrPhotoError> {
+        let searchHistoryRepository = UserDefaultSearchHistoryRepository()
+        searchHistoryRepository.getSearchHistory()
+        return searchHistoryRepository.searchHistorySubject.map { [unowned self] searchTerms -> [ItemCollectionViewCellType] in
+            self.createItemsForCollection(searchTerms: searchTerms)
+        }.eraseToAnyPublisher()
     }
 
     @objc
     private func changeInternetStatus(notification: Notification) {
         if notification.name == Notifications.Reachability.notConnected.name {
-            output?.showError(title: "No Internet Conncection", subtitle: "No Internet Conncection")
+            output?.showError(title: "No Internet Connection", subtitle: "No Internet Conncection")
             emptyPlaceHolder.send(.noInternetConnection)
         } else {
             emptyPlaceHolder.send(.startSearch)
@@ -89,48 +115,27 @@ extension PhotosListViewModel: PhotosListViewModelInput {
 
 extension PhotosListViewModel {
 
-    private func getData(for query: String) {
-        guard Reachability.shared.isConnected else {
-            emptyPlaceHolder.send(.noInternetConnection)
-            return
-        }
+    private func getData(for query: String, page: Int) -> AnyPublisher<[ItemCollectionViewCellType], FlickrPhotoError> {
+
         output?.showLoading()
         canLoadMore = false
 
-        try? photosRepository.photos(for: query, page: page).sink(receiveCompletion: { [unowned self] completion in
-            self.output?.hideLoading()
-
-            switch completion {
-            case .finished:
-                break
-            case .failure(let error):
-                self.itemsForCollection.send(completion: .failure(error))
-
-            }
-
-        }, receiveValue: { [unowned self] searchResult in
-            self.output?.hideLoading()
-
-            guard let photos = searchResult.photos, photos.currentPage < photos.totalPages  else {
-                self.handleNoPhotos()
-                return
-            }
-            self.handleNewPhotos(photos: photos)
-            self.canLoadMore = true
-
-        }).store(in: &cancelableSet)
-
+        return try! photosRepository.photos(for: query, page: page).compactMap {$0}.map { [unowned self] searchResult ->  [ItemCollectionViewCellType] in
+            return self.handle(searchResult: searchResult)
+        }.eraseToAnyPublisher()
     }
 
-    private func handleNewPhotos(photos: Photos) {
-        let newItems: [ItemCollectionViewCellType] = createItemsForCollection(photosArray: photos.photos)
-        itemsForCollection.value.append(contentsOf: newItems)
-        if itemsForCollection.value.isEmpty {
-            emptyPlaceHolder.send(.noResults)
-        } else {
-            itemsForCollection.send(newItems)
+    func handle(searchResult: FlickrSearchResult) -> [ItemCollectionViewCellType] {
+        output?.hideLoading()
+
+        guard let photos = searchResult.photos, photos.currentPage < photos.totalPages  else {
+            handleNoPhotos()
+            return []
         }
+        canLoadMore = true
+        return createItemsForCollection(photosArray: photos.photos)
     }
+
 
     private func handleNoPhotos() {
         if  itemsForCollection.value.isEmpty {
@@ -140,13 +145,13 @@ extension PhotosListViewModel {
 
     private func createItemsForCollection(photosArray: [Photo]) -> [ItemCollectionViewCellType] {
         return photosArray.map { photo -> ItemCollectionViewCellType  in
-                .photo(photo: photo)
+            ItemCollectionViewCellType.photo(photo: photo)
         }
     }
 
     private func createItemsForCollection(searchTerms: [String]) -> [ItemCollectionViewCellType] {
-        return searchTerms.map { searchTerm -> ItemCollectionViewCellType  in
-                .search(term: searchTerm)
+        return searchTerms.map { searchTerm -> ItemCollectionViewCellType in
+            ItemCollectionViewCellType.search(term: searchTerm)
         }
     }
 }

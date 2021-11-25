@@ -30,7 +30,6 @@ class PhotosListViewController: UIViewController {
         getSearchHistory()
     }
 
-
     // MARK: - Setup UI
 
     private func setupUI() {
@@ -107,9 +106,9 @@ class PhotosListViewController: UIViewController {
             self.updateData(itemsForCollection: itemsForCollection)
         }).store(in: &cancelableSet)
 
-        viewModel?.state.sink { [unowned self] _ in
+        viewModel?.state.removeDuplicates().sink(receiveValue: { [unowned self] _  in
             self.clearCollection()
-        }.store(in: &cancelableSet)
+        }).store(in: &cancelableSet)
 
         viewModel?.emptyPlaceHolder.sink { [unowned self] emptyPlaceHolderType in
             self.emptyState(emptyPlaceHolderType: emptyPlaceHolderType)
@@ -119,9 +118,7 @@ class PhotosListViewController: UIViewController {
     private func emptyState(emptyPlaceHolderType: EmptyPlaceHolderType) {
         clearCollection()
         photosCollectionView.setEmptyView(emptyPlaceHolderType: emptyPlaceHolderType, completionBlock: { [weak self] in
-            if let text = self?.searchController.searchBar.text, !text.isEmpty, text.count >= 3 {
-                self?.viewModel?.search(for: text)
-            }
+            self?.search()
         })
     }
 
@@ -138,10 +135,9 @@ class PhotosListViewController: UIViewController {
 
     private func updateData(itemsForCollection: [ItemCollectionViewCellType]) {
 
-        if case let .searchResult(term) = viewModel?.state.value {
+       if case let .searchResult(term, _) = viewModel?.state.value {
             searchController.searchBar.text = term
         }
-        photosCollectionView.restore()
 
         guard !itemsForCollection.isEmpty else {
             showReadyToSearch()
@@ -149,6 +145,7 @@ class PhotosListViewController: UIViewController {
         }
 
         if collectionDataSource == nil {
+            photosCollectionView.restore()
             collectionDataSource = PhotosCollectionViewDataSource(viewModelInput: viewModel, itemsForCollection: itemsForCollection)
             photosCollectionView.dataSource = collectionDataSource
             photosCollectionView.delegate = collectionDataSource
@@ -169,17 +166,26 @@ class PhotosListViewController: UIViewController {
         }
     }
 
+
+    private func search() {
+        if let text = searchController.searchBar.text, !text.isEmpty, text.count >= 3 {
+            clearCollection()
+            viewModel?.state.send(.searchResult(term: text, page: 1))
+        }
+    }
+
+    private func getSearchHistory() {
+        clearCollection()
+        viewModel?.state.send(.searchHistory)
+    }
+
+
     private func clearCollection() {
         collectionDataSource = nil
         photosCollectionView.dataSource = nil
         photosCollectionView.dataSource = nil
         photosCollectionView.reloadData()
     }
-
-    private func getSearchHistory() {
-        viewModel?.getSearchHistory()
-    }
-
     private func showReadyToSearch() {
         photosCollectionView.setEmptyView(emptyPlaceHolderType: .startSearch, completionBlock: { [weak self] in
             self?.searchController.isActive = true
@@ -218,9 +224,7 @@ extension PhotosListViewController: UISearchControllerDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        if let text = searchBar.text, !text.isEmpty, text.count >= 3 {
-            viewModel?.search(for: text)
-        }
+        search()
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

@@ -73,7 +73,7 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
                 switch state.value {
                 case .searchHistory:
                     headerView.configCell(searchTerm: "Search History")
-                case .searchResult(let term):
+                case .searchResult(let term, _):
                     let headerTitle = "Searching For \(term)"
                     headerView.configCell(searchTerm: headerTitle)
                 }
@@ -86,7 +86,7 @@ final class PhotosCollectionViewDataSource: NSObject, UICollectionViewDataSource
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if case let .search(term) = itemsForCollection[indexPath.row] {
-            viewModelInput?.search(for: term)
+            viewModelInput?.state.send(.searchResult(term: term, page: 1))
         }
     }
 

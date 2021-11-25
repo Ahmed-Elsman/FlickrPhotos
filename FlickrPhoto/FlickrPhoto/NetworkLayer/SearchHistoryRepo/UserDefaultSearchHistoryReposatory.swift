@@ -6,39 +6,41 @@
 //
 
 import Foundation
+import Combine
 
 final class UserDefaultSearchHistoryRepository: SearchHistoryRepository {
+    var searchHistorySubject: CurrentValueSubject<[String], FlickrPhotoError> = CurrentValueSubject<[String], FlickrPhotoError>([])
 
-    func getSearchHistory() -> [String] {
-        if let history = UserDefaults.standard.array(forKey: UserDefaultsKey.searchHistoryOfPhotos.rawValue) as? [String] {
-            return history
-        }
-        return []
-
+    init() {
+        getSearchHistory()
     }
 
-    @discardableResult
-    func saveSearchKeyword(searchKeyword: String) -> [String] {
-        let history = getSearchHistory()
-        guard !searchKeyword.isEmpty else {
-            return history
+    func getSearchHistory() {
+        if let history = UserDefaults.standard.array(forKey: UserDefaultsKey.photosSearchHistory.rawValue) as? [String] {
+            searchHistorySubject.send(history)
+        } else {
+            searchHistorySubject.send([])
         }
+    }
+
+    func saveSearchKeyword(searchKeyword: String) {
+        let history = searchHistorySubject.value
 
         let lowercaseKeyword = searchKeyword.lowercased()
         var result = history.filter { keyword -> Bool in
             keyword.lowercased() != lowercaseKeyword
         }
         result.append(searchKeyword)
-        UserDefaults.standard.set(result, forKey: UserDefaultsKey.searchHistoryOfPhotos.rawValue)
-        return history
+        UserDefaults.standard.set(result, forKey: UserDefaultsKey.photosSearchHistory.rawValue)
+        searchHistorySubject.send(result)
     }
 
-    func clearSearchHistory() -> [String] {
-        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.searchHistoryOfPhotos.rawValue)
-        return []
+    func clearSearchHistory() {
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.photosSearchHistory.rawValue)
+        searchHistorySubject.send([])
     }
 }
 
 enum UserDefaultsKey: String {
-    case searchHistoryOfPhotos
+    case photosSearchHistory
 }

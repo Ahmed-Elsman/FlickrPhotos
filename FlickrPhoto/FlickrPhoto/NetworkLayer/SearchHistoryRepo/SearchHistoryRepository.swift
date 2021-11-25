@@ -6,11 +6,11 @@
 //
 
 import Foundation
-
-#warning("I Need To convert it to combine.")
+import Combine
 
 protocol SearchHistoryRepository {
-    func getSearchHistory() -> [String]
-    func saveSearchKeyword(searchKeyword: String) -> [String]
-    func clearSearchHistory() -> [String]
+    var searchHistorySubject: CurrentValueSubject<[String], FlickrPhotoError> { get set }
+    func getSearchHistory()
+    func saveSearchKeyword(searchKeyword: String)
+    func clearSearchHistory()
 }

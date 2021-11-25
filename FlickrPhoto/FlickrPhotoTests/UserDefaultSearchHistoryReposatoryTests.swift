@@ -12,30 +12,46 @@ import Combine
 class UserDefaultSearchHistoryReposatoryTests: XCTestCase {
 
     var userDefaultSearchHistoryRepository: UserDefaultSearchHistoryRepository!
+    var subscriptions = Set<AnyCancellable>()
 
     override func setUp() {
         userDefaultSearchHistoryRepository = UserDefaultSearchHistoryRepository()
+        subscriptions = []
     }
 
     func test_ClearHistorySuccess() {
         let promise = XCTestExpectation(description: "Clearing Search History Success")
-        let keywords = userDefaultSearchHistoryRepository.clearSearchHistory()
-        XCTAssertEqual(keywords.count, 0)
-        promise.fulfill()
+        userDefaultSearchHistoryRepository.clearSearchHistory()
+        userDefaultSearchHistoryRepository.searchHistorySubject
+            .sink(receiveCompletion: { _ in }) { photos in
+                XCTAssertEqual(photos.count, 0)
+                promise.fulfill()
+            }.store(in: &subscriptions)
+
+        wait(for: [promise], timeout: 1)
     }
 
     func test_SaveDataSuccess() {
         let promise = XCTestExpectation(description: "Saving Success")
         userDefaultSearchHistoryRepository.saveSearchKeyword(searchKeyword: "Tree")
-        let keywords = userDefaultSearchHistoryRepository.getSearchHistory()
-        XCTAssertGreaterThan(keywords.count, 0)
-        promise.fulfill()
+        userDefaultSearchHistoryRepository.searchHistorySubject
+            .sink(receiveCompletion: { _ in }) { photos in
+                XCTAssertGreaterThan(photos.count, 0)
+                promise.fulfill()
+            }.store(in: &subscriptions)
+
+        wait(for: [promise], timeout: 1)
     }
 
     func test_GetDataSuccess() {
         let promise = XCTestExpectation(description: "Getting Data Success")
-        let keywords = userDefaultSearchHistoryRepository.getSearchHistory()
-        XCTAssertGreaterThan(keywords.count, 0)
-        promise.fulfill()
+        userDefaultSearchHistoryRepository.saveSearchKeyword(searchKeyword: "Tree")
+        userDefaultSearchHistoryRepository.searchHistorySubject
+            .sink(receiveCompletion: { _ in }) { photos in
+                XCTAssertGreaterThan(photos.count, 0)
+                promise.fulfill()
+            }.store(in: &subscriptions)
+
+        wait(for: [promise], timeout: 1)
     }
 }
